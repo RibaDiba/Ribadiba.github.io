@@ -1,4 +1,5 @@
 import { motion, Variants } from "framer-motion";
+import { getAssetPath } from "@/utils/paths";
 
 const containerVariants: Variants = {
     initial: { opacity: 0 },
@@ -48,7 +49,7 @@ const Hexagon = ({ image, alt }: { image: string, alt: string }) => (
             />
         </svg>
         <div className="relative z-10 w-20 h-20 flex items-center justify-center">
-             <img src={image} alt={alt} className="w-full h-full object-contain" />
+             <img src={getAssetPath(image)} alt={alt} className="w-full h-full object-contain" />
         </div>
     </motion.div>
 );

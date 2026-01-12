@@ -1,6 +1,7 @@
 
 
 import { Links } from "@/stores/Links";
+import { getAssetPath } from "@/utils/paths";
 
 const Navigation = ({ active, setActive }: { active: string; setActive: (page: string) => void }) => {
 
@@ -17,7 +18,7 @@ const Navigation = ({ active, setActive }: { active: string; setActive: (page: s
             <div className="relative h-[250px] w-[250px]">
                 <div className="absolute top-[20px] left-[10px] h-[250px] w-[250px] rounded-full bg-[#57534E]"></div>
                 <div className="absolute top-0 left-0 h-[250px] w-[250px] rounded-full overflow-hidden border-4 border-[#57534E]">
-                    <img src="/PFP.png" alt="Profile" className="h-full w-full object-cover" />
+                    <img src={getAssetPath("/PFP.png")} alt="Profile" className="h-full w-full object-cover" />
                 </div>
             </div>
 
@@ -47,13 +48,13 @@ const Navigation = ({ active, setActive }: { active: string; setActive: (page: s
             {/* socials */}
             <div className="flex gap-6">
                 <a href={Links.GithubLink}>
-                    <img src="/Socials_Gray/Github.png" alt="Github" className="h-12 w-auto" />
+                    <img src={getAssetPath("/Socials_Gray/Github.png")} alt="Github" className="h-12 w-auto" />
                 </a>
                 <a href={Links.LinkedinLink}>
-                    <img src="/Socials_Gray/Linkedin.png" alt="LinkedIn" className="h-12 w-auto" />
+                    <img src={getAssetPath("/Socials_Gray/Linkedin.png")} alt="LinkedIn" className="h-12 w-auto" />
                 </a>
                 <a href={Links.InstaGramLink}>
-                    <img src="/Socials_Gray/Instagram.png" alt="Instagram" className="h-12 w-auto" />
+                    <img src={getAssetPath("/Socials_Gray/Instagram.png")} alt="Instagram" className="h-12 w-auto" />
                 </a>
             </div>
 

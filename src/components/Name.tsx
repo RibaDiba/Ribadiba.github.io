@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useBubbles } from "../hooks/useBubbles";
 import { Links } from "@/stores/Links";
+import { getAssetPath } from "@/utils/paths";
 
 const Name = () => {
     const { bubbles, scrollY } = useBubbles();
@@ -46,13 +47,13 @@ const Name = () => {
                     <div className="pointer-events-auto">Abir Modak</div>
                     <div className="flex gap-[32px] pointer-events-auto">
                         <a href={Links.GithubLink}>
-                            <img src="/Socials_Orange/Github.png" alt="Github" />
+                            <img src={getAssetPath("/Socials_Orange/Github.png")} alt="Github" />
                         </a>
                         <a href={Links.LinkedinLink}>
-                            <img src="/Socials_Orange/Linkedin.png" alt="LinkedIn" />
+                            <img src={getAssetPath("/Socials_Orange/Linkedin.png")} alt="LinkedIn" />
                         </a>
                         <a href={Links.InstaGramLink}>
-                            <img src="/Socials_Orange/Instagram.png" alt="Instagram" />
+                            <img src={getAssetPath("/Socials_Orange/Instagram.png")} alt="Instagram" />
                         </a>
                     </div>
                 </div>
