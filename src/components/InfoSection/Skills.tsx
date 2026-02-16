@@ -34,21 +34,21 @@ const itemVariants: Variants = {
 };
 
 const Hexagon = ({ image, alt }: { image: string, alt: string }) => (
-    <motion.div 
-        className="w-40 h-40 flex items-center justify-center relative"
+    <motion.div
+        className="w-24 h-24 md:w-40 md:h-40 flex items-center justify-center relative"
         whileHover={{ scale: 1.1 }}
         transition={{ type: "spring", stiffness: 300 }}
     >
         <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-lg absolute top-0 left-0" style={{ color: "#57534E" }}>
-             <path 
-                d="M50 5 L90 28 V72 L50 95 L10 72 V28 Z" 
-                fill="currentColor" 
-                stroke="currentColor" 
-                strokeWidth="10" 
-                strokeLinejoin="round" 
+             <path
+                d="M50 5 L90 28 V72 L50 95 L10 72 V28 Z"
+                fill="currentColor"
+                stroke="currentColor"
+                strokeWidth="10"
+                strokeLinejoin="round"
             />
         </svg>
-        <div className="relative z-10 w-20 h-20 flex items-center justify-center">
+        <div className="relative z-10 w-12 h-12 md:w-20 md:h-20 flex items-center justify-center">
              <img src={getAssetPath(image)} alt={alt} className="w-full h-full object-contain" />
         </div>
     </motion.div>
@@ -56,34 +56,34 @@ const Hexagon = ({ image, alt }: { image: string, alt: string }) => (
 
 const Skills = () => {
     return (
-        <motion.div 
-            className="flex flex-col items-center gap-12"
+        <motion.div
+            className="flex flex-col items-center gap-8 md:gap-12 px-4"
             variants={containerVariants}
         >
-            <motion.div 
-                className="text-8xl font-bold" 
+            <motion.div
+                className="text-4xl md:text-8xl font-bold"
                 style={{ color: "#57534E" }}
                 variants={itemVariants}
             >
-                Skills.   
+                Skills.
             </motion.div>
 
-            <motion.div className="flex flex-col items-center -space-y-4" variants={containerVariants}>
+            <motion.div className="flex flex-col items-center -space-y-2 md:-space-y-4" variants={containerVariants}>
                  {/* Row 1 */}
-                <motion.div className="flex gap-4" variants={containerVariants}>
+                <motion.div className="flex gap-2 md:gap-4" variants={containerVariants}>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/svelte.png" alt="Svelte" /></motion.div>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/react.png" alt="React" /></motion.div>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/next.svg" alt="Next.js" /></motion.div>
                 </motion.div>
                  {/* Row 2 */}
-                <motion.div className="flex gap-4" variants={containerVariants}>
+                <motion.div className="flex gap-2 md:gap-4" variants={containerVariants}>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/javascript.png" alt="JavaScript" /></motion.div>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/c++.png" alt="C++" /></motion.div>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/python.png" alt="Python" /></motion.div>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/java.png" alt="Java" /></motion.div>
                 </motion.div>
                  {/* Row 3 */}
-                <motion.div className="flex gap-4" variants={containerVariants}>
+                <motion.div className="flex gap-2 md:gap-4" variants={containerVariants}>
                     <motion.div variants={itemVariants}><Hexagon image="/logos_skills/arduino.svg" alt="Arduino" /></motion.div>
                 </motion.div>
             </motion.div>

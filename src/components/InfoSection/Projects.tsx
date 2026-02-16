@@ -41,20 +41,20 @@ const Projects = () => {
 
     return (
         <>
-            <motion.div 
-                className="flex flex-col text-center gap-12 items-center" 
+            <motion.div
+                className="flex flex-col text-center gap-8 md:gap-12 items-center px-4"
                 style={{ color: "#57534E" }}
                 variants={containerVariants}
             >
-                <motion.div 
-                    className="text-8xl leading-none font-bold"
+                <motion.div
+                    className="text-4xl md:text-8xl leading-none font-bold"
                     variants={itemVariants}
                 >
                     Projects.
                 </motion.div>
-                
-                <motion.div 
-                    className="grid grid-cols-3 gap-8"
+
+                <motion.div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
                     variants={containerVariants}
                 >
                     {projects.map((project, index) => (

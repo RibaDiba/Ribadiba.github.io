@@ -17,14 +17,14 @@ const Info = () => {
     };
 
     return (
-        
+
         <>
-            <div className="flex h-full w-full bg-[#D9D9D9]">
-                <div className="h-full w-1/4">
+            <div className="flex flex-col md:flex-row h-full w-full bg-[#D9D9D9]">
+                <div className="h-auto md:h-full w-full md:w-1/4">
                     <Navigation active={active} setActive={setActive}/>
                 </div>
-                
-                <div className="flex w-3/4 items-center justify-center overflow-hidden">
+
+                <div className="flex w-full md:w-3/4 items-center justify-center overflow-hidden">
                     <AnimatePresence mode="wait">
                         {active === "About Me" && (
                             <motion.div

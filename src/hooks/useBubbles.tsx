@@ -21,12 +21,15 @@ export const useBubbles = () => {
     useEffect(() => {
         const generateBubbles = () => {
             const newBubbles: Array<{ id: number; top: number; left: number; size: number; speed: number }> = [];
-            const count = 7; 
-            const minSize = 150; 
-            const maxSize = 400;
-            
+
             const winWidth = window.innerWidth;
             const winHeight = window.innerHeight;
+
+            // Mobile detection and responsive bubble sizing
+            const isMobile = winWidth < 768;
+            const count = isMobile ? 4 : 7;
+            const minSize = isMobile ? 80 : 150;
+            const maxSize = isMobile ? 200 : 400;
 
             // Safe zone in center (percentage)
             const safeZone = {
