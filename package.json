@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:node20": "npm_config_loglevel=error npx -y node@20 ./node_modules/eslint/bin/eslint.js",
+    "build:node20": "npm_config_loglevel=error npx -y node@20 ./node_modules/next/dist/bin/next build",
+    "verify:node20": "npm run lint:node20 && npm run build:node20"
   },
   "dependencies": {
     "daisyui": "^5.5.14",

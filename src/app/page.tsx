@@ -1,16 +1,13 @@
-import Name from "../components/Name";
-import Info from "../components/Info";
+import BioSection from "@/components/Redesign/BioSection";
+import DesktopSection from "@/components/Redesign/DesktopSection";
+import HeroSection from "@/components/Redesign/HeroSection";
 
 const Home = () => {
     return (
         <>
-            <div className="h-dvh">
-                <Name />
-            </div>
-
-            <div className="h-dvh">
-                <Info />
-            </div>
+            <HeroSection />
+            <BioSection />
+            <DesktopSection />
         </>
     );
 };

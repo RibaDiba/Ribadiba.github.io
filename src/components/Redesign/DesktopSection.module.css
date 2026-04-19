@@ -1,0 +1,766 @@
+.retroDesktopTokens {
+    --retro-icon-stroke: #1a1a1a;
+    --retro-icon-shadow: rgba(0, 0, 0, 0.35);
+    --retro-folder-base: #d9b85a;
+    --retro-folder-highlight: #f0d679;
+    --retro-folder-shadow: #a8872e;
+    --retro-file-paper: #ffffff;
+    --retro-file-paper-shadow: #c8c8cc;
+    --retro-file-image: #f0e8d4;
+    --retro-file-code: #1a1a1a;
+    --retro-file-code-ink: #9af26a;
+    --retro-icon-label: #ffffff;
+    --retro-surface-hover: rgba(255, 255, 255, 0.06);
+    --retro-surface-focus: rgba(255, 138, 60, 0.12);
+    --retro-icon-mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.iconSurface {
+    border: 1px dashed transparent;
+    border-radius: 4px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.iconSurface:focus-visible {
+    border-color: #ff8a3c;
+    background: var(--retro-surface-focus);
+}
+
+.desktopIconsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 92px);
+    grid-auto-rows: 96px;
+    gap: 4px;
+    width: fit-content;
+}
+
+.desktop {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 22px 56px;
+}
+
+.desktopLabel {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    pointer-events: none;
+    font-family: var(--retro-icon-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.desktopIconSurface {
+    width: 92px;
+    height: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 6px 6px;
+}
+
+.desktopIconSurface:hover {
+    background: var(--retro-surface-hover);
+}
+
+.desktopIconSurfaceSelected {
+    background: rgba(90, 140, 200, 0.25);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.folderIconSurface {
+    width: 84px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px 4px;
+    border: 0;
+    border-radius: 0;
+}
+
+.folderIconSurface:hover {
+    background: rgba(80, 120, 180, 0.12);
+}
+
+.folderIconSurfaceSelected {
+    background: #3a5a8a;
+}
+
+.folderFilesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 84px);
+    grid-auto-rows: 90px;
+    gap: 2px;
+}
+
+.iconLabel {
+    margin-top: 2px;
+    max-width: 100%;
+    font-family: var(--retro-icon-mono);
+    font-size: 11px;
+    line-height: 1.15;
+    color: var(--retro-icon-label);
+    text-align: center;
+    word-break: break-word;
+}
+
+.desktopIconLabel {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.6);
+    padding: 0 2px;
+}
+
+.desktopIconLabelSelected {
+    background: #1a3a66;
+    outline: 1px dotted rgba(255, 255, 255, 0.6);
+    outline-offset: 0;
+}
+
+.folderIconLabel {
+    color: #1a1a1a;
+    font-size: 10.5px;
+    text-shadow: none;
+    padding: 1px 2px;
+}
+
+.folderIconLabelSelected {
+    background: #3a5a8a;
+    color: #fff;
+}
+
+.iconArt {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+}
+
+.desktopIconArt {
+    width: 48px;
+    height: 40px;
+    --retro-file-scale: 1;
+}
+
+.folderIconArt {
+    width: 40px;
+    height: 36px;
+    --retro-file-scale: 0.82;
+}
+
+.iconFolder {
+    background: var(--retro-folder-base);
+    border: 2px solid var(--retro-icon-stroke);
+    border-radius: 1px;
+    box-shadow:
+        inset 2px 2px 0 var(--retro-folder-highlight),
+        inset -2px -2px 0 var(--retro-folder-shadow),
+        2px 2px 0 var(--retro-icon-shadow);
+}
+
+.iconFolder::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 2px;
+    width: 18px;
+    height: 8px;
+    background: var(--retro-folder-base);
+    border: 2px solid var(--retro-icon-stroke);
+    border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+    box-shadow: inset 2px 2px 0 var(--retro-folder-highlight);
+}
+
+.iconFile {
+    width: 34px;
+    height: 42px;
+    margin: 0 auto;
+    background: var(--retro-file-paper);
+    border: 2px solid var(--retro-icon-stroke);
+    box-shadow:
+        inset -2px -2px 0 var(--retro-file-paper-shadow),
+        2px 2px 0 var(--retro-icon-shadow);
+    transform: translateY(-1px) scale(var(--retro-file-scale));
+    transform-origin: top center;
+}
+
+.iconFile::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -2px;
+    border-style: solid;
+    border-width: 0 10px 10px 0;
+    border-color: transparent var(--retro-icon-stroke) transparent transparent;
+}
+
+.iconFile::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 14px;
+    height: 2px;
+    background: var(--retro-icon-stroke);
+    box-shadow: 0 4px 0 var(--retro-icon-stroke), 0 8px 0 var(--retro-icon-stroke), 0 12px 0 var(--retro-icon-stroke), 0 16px 0 var(--retro-icon-stroke);
+}
+
+.iconFileImg {
+    background: var(--retro-file-image);
+}
+
+.iconFileImg::after {
+    content: "";
+    top: 12px;
+    left: 4px;
+    right: 4px;
+    height: 18px;
+    background: linear-gradient(180deg, #6aa5c9 0%, #6aa5c9 55%, #a7c678 55%, #7ba04a 100%);
+    border: 1px solid var(--retro-icon-stroke);
+    box-shadow: none;
+}
+
+.iconFileCode {
+    background: var(--retro-file-code);
+}
+
+.iconFileCode::after {
+    content: "<>";
+    top: 14px;
+    left: 0;
+    right: 0;
+    height: auto;
+    background: transparent;
+    color: var(--retro-file-code-ink);
+    text-align: center;
+    font-family: var(--retro-icon-mono);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.iconFilePaper::after {
+    left: 4px;
+    right: 10px;
+    box-shadow: 0 4px 0 var(--retro-icon-stroke), 0 8px 0 var(--retro-icon-stroke), 0 12px 0 var(--retro-icon-stroke);
+}
+
+.windowFrame {
+    position: absolute;
+    min-width: 280px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    background: #c8c4b8;
+    border: 2px solid #1a1a1a;
+    box-shadow:
+        inset 2px 2px 0 #ebe7db,
+        inset -2px -2px 0 #7a7668,
+        6px 6px 0 rgba(0, 0, 0, 0.45);
+}
+
+.windowFrameFocused {
+    box-shadow:
+        inset 2px 2px 0 #ebe7db,
+        inset -2px -2px 0 #7a7668,
+        8px 8px 0 rgba(0, 0, 0, 0.55);
+}
+
+.windowTitleBar {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 4px 0 8px;
+    border-bottom: 2px solid #1a1a1a;
+    background: linear-gradient(180deg, #6a6a6a 0%, #4a4a4a 100%);
+    color: #d8d8d8;
+    cursor: move;
+    user-select: none;
+}
+
+.windowTitleBarFocused {
+    background: linear-gradient(180deg, #d97a2a 0%, #a84e0e 100%);
+    color: #fff;
+}
+
+.windowTitleText {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--retro-icon-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.windowTitleButtons {
+    display: flex;
+    gap: 3px;
+}
+
+.windowTitleButton {
+    width: 18px;
+    height: 16px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1.5px solid #1a1a1a;
+    background: #c8c4b8;
+    box-shadow: inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668;
+    color: #1a1a1a;
+    font-family: var(--retro-icon-mono);
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.windowTitleButton:active {
+    box-shadow: inset -1px -1px 0 #ebe7db, inset 1px 1px 0 #7a7668;
+}
+
+.windowMenuBar {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px;
+    border-bottom: 1px solid #7a7668;
+    background: #c8c4b8;
+    color: #1a1a1a;
+    font-family: var(--retro-icon-mono);
+    font-size: 11px;
+}
+
+.windowBody {
+    flex: 1;
+    margin: 4px;
+    padding: 10px;
+    overflow: auto;
+    background: #efece0;
+    border: 2px inset #9a9688;
+    color: #2e2b24;
+}
+
+.windowStatusBar {
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    border-top: 1px solid #7a7668;
+    background: #c8c4b8;
+    color: #3a3a3a;
+    font-family: var(--retro-icon-mono);
+    font-size: 10px;
+}
+
+.fileDetail {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 14px;
+    font-family: var(--retro-icon-mono);
+    font-size: 11.5px;
+    color: #1a1a1a;
+    line-height: 1.55;
+}
+
+.fileDetailPreviewWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.fileDetailPreview {
+    aspect-ratio: 4 / 3;
+    border: 2px solid #1a1a1a;
+    background: repeating-linear-gradient(45deg, #ffffff 0 8px, #d0d0d0 8px 16px);
+    display: grid;
+    place-items: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 10px;
+    text-align: center;
+    padding: 8px;
+}
+
+.fileDetailPreviewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid #7a7668;
+}
+
+.fileDetailContent {
+    min-width: 0;
+}
+
+.fileDetailTitle {
+    margin: 0 0 6px;
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 1px solid #7a7668;
+    padding-bottom: 4px;
+}
+
+.fileDetailMeta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2px 10px;
+    margin: 6px 0 10px;
+    font-size: 10.5px;
+}
+
+.fileDetailMetaKey {
+    color: #5a5a5a;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.fileDetailMeta dd {
+    margin: 0;
+}
+
+.fileDetailDescription p {
+    margin: 0 0 8px;
+}
+
+.fileDetailNotes {
+    font-style: italic;
+}
+
+.fileDetailTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.fileDetailTag {
+    font-family: var(--retro-icon-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    background: #fff;
+    border: 1px solid #1a1a1a;
+    padding: 2px 6px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.fileDetailLink {
+    display: inline-block;
+    margin-top: 8px;
+    font-family: var(--retro-icon-mono);
+    font-size: 11px;
+    color: #0055aa;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.fileDetailLinkFallback {
+    margin: 8px 0 0;
+    color: #555148;
+}
+
+.fileDetailMediaSection {
+    margin-top: 10px;
+}
+
+.fileDetailMediaHeading {
+    margin: 0 0 8px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5a5a5a;
+}
+
+.fileDetailMediaList {
+    display: grid;
+    gap: 10px;
+}
+
+.fileDetailMediaFigure {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+}
+
+.fileDetailMediaImage {
+    width: 100%;
+    border: 1px solid #7a7668;
+    background: #fff;
+}
+
+.fileDetailMediaVideo {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid #7a7668;
+    background: #000;
+    display: block;
+}
+
+.fileDetailMediaCaption,
+.fileDetailMediaUnavailable {
+    font-size: 10px;
+    color: #555148;
+}
+
+.fileDetailMediaDocument {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid #1a1a1a;
+    background: #fff;
+    color: #0055aa;
+    font-size: 10.5px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.resizeHandle {
+    position: absolute;
+    z-index: 2;
+}
+
+.resizeHandleE {
+    top: 8px;
+    bottom: 8px;
+    right: -3px;
+    width: 6px;
+    cursor: ew-resize;
+}
+
+.resizeHandleW {
+    top: 8px;
+    bottom: 8px;
+    left: -3px;
+    width: 6px;
+    cursor: ew-resize;
+}
+
+.resizeHandleN {
+    top: -3px;
+    left: 8px;
+    right: 8px;
+    height: 6px;
+    cursor: ns-resize;
+}
+
+.resizeHandleS {
+    bottom: -3px;
+    left: 8px;
+    right: 8px;
+    height: 6px;
+    cursor: ns-resize;
+}
+
+.resizeHandleNE {
+    top: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+}
+
+.resizeHandleNW {
+    top: -3px;
+    left: -3px;
+    width: 12px;
+    height: 12px;
+    cursor: nwse-resize;
+}
+
+.resizeHandleSE {
+    right: -3px;
+    bottom: -3px;
+    width: 14px;
+    height: 14px;
+    cursor: nwse-resize;
+    background: linear-gradient(
+        135deg,
+        transparent 40%,
+        #7a7668 40% 46%,
+        transparent 46% 60%,
+        #7a7668 60% 66%,
+        transparent 66% 80%,
+        #7a7668 80% 86%,
+        transparent 86%
+    );
+}
+
+.resizeHandleSW {
+    left: -3px;
+    bottom: -3px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+}
+
+.taskbar {
+    z-index: 10000;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+    background: #c8c4b8;
+    border-top: 2px solid #ebe7db;
+    box-shadow: inset 0 -2px 0 #7a7668;
+    font-family: var(--retro-icon-mono);
+    font-size: 11px;
+}
+
+.taskbarStart {
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px 0 8px;
+    border: 2px solid #1a1a1a;
+    background: #3a6a3a;
+    box-shadow: inset 1px 1px 0 #8bc28b, inset -1px -1px 0 #1a3a1a;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.taskbarStart::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 1px solid #1a1a1a;
+    background: conic-gradient(from 0deg, #ff7a18, #e5393b, #9af26a, #7aa2ff, #ff7a18);
+}
+
+.taskbarSeparator {
+    width: 2px;
+    height: 22px;
+    margin: 0 2px;
+    background: linear-gradient(90deg, #7a7668 0%, #7a7668 50%, #ebe7db 50%, #ebe7db 100%);
+}
+
+.taskbarItems {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    overflow: hidden;
+}
+
+.taskbarItem {
+    height: 24px;
+    max-width: 160px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    border: 2px solid #1a1a1a;
+    background: #c8c4b8;
+    box-shadow: inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668;
+    color: #1a1a1a;
+    font-size: 10.5px;
+    cursor: pointer;
+}
+
+.taskbarItemFocused {
+    background: #ebe7db;
+    box-shadow: inset -1px -1px 0 #ebe7db, inset 1px 1px 0 #7a7668;
+}
+
+.taskbarMini {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    background: #d9b85a;
+    border: 1.5px solid #1a1a1a;
+}
+
+.taskbarItemLabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.taskbarClock {
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 1.5px inset #9a9688;
+    background: #c8c4b8;
+    color: #1a1a1a;
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+
+.taskbarClock::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #9af26a, #3a6a3a);
+}
+
+/* Preview image click-to-expand button */
+.fileDetailPreviewButton {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+}
+
+.fileDetailPreviewButton:hover .fileDetailPreviewImage {
+    opacity: 0.82;
+}
+
+.fileDetailPreviewHint {
+    font-family: var(--retro-icon-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: rgba(0, 0, 0, 0.45);
+    text-transform: uppercase;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+/* Image viewer window */
+.windowBodyImage {
+    padding: 0;
+    background: repeating-linear-gradient(45deg, #ffffff 0 8px, #d0d0d0 8px 16px);
+}
+
+.imageWindowBody {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 12px;
+}
+
+.imageWindowImg {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: 1px solid #7a7668;
+}
