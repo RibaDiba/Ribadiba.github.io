@@ -55,7 +55,7 @@ const AboutMe = () => {
                     className="text-center text-[#57534E] max-w-5xl font-semibold"
                     variants={itemVariants}
                 >
-                    Hey! I'm Abir Modak, I'm a computer science major at <span className="font-bold text-black">Maryland, College Park</span>
+                    Hey! I&apos;m Abir Modak, I&apos;m a computer science major at <span className="font-bold text-black">Maryland, College Park</span>
                 </motion.div>
 
                 <motion.div
