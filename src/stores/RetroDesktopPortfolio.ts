@@ -262,7 +262,7 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                     notes: "Led the frontend development and integrated AWS Bedrock for intelligent document assistance in collaboration with MEUS.",
                     tags: ["Enterprise SWE", "LLM", "AWS"],
                     link: "",
-                    previewImage: localPreview("/Personal Website/assets/poster-sony.png", "Mindshift project preview"),
+                    previewImage: localPreview("/ProjectImages/MEUS.png", "Mindshift project preview"),
                     mediaAssets: []
                 }
             },

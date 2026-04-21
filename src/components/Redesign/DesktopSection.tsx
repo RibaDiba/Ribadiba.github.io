@@ -273,7 +273,14 @@ const GameContainer = ({ gameId }: { gameId: string }) => {
 const renderMediaAsset = (asset: PortfolioMediaAsset, index: number) => {
     if (asset.type === "image") {
         const imageSrc = toMediaSrc(asset.src);
-        if (!imageSrc) return null;
+        if (!imageSrc) {
+            return (
+                <figure key={`placeholder-img-${index}`} className={styles.fileDetailMediaFigure}>
+                    <div className={styles.fileDetailMediaPlaceholder}>[ img · unavailable ]</div>
+                    {asset.alt ? <figcaption className={styles.fileDetailMediaCaption}>{asset.alt}</figcaption> : null}
+                </figure>
+            );
+        }
 
         return (
             <figure key={`${asset.src}-${index}`} className={styles.fileDetailMediaFigure}>
@@ -916,7 +923,7 @@ const DesktopSection = () => {
                                                                         />
                                                                     </button>
                                                                 ) : (
-                                                                    <>[ project · {windowItem.file.data.title} ]</>
+                                                                    <div className={styles.fileDetailPreviewPlaceholder}>[ no preview ]</div>
                                                                 )}
                                                             </div>
                                                             {previewImageSrc ? (

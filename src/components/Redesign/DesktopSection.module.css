@@ -402,6 +402,48 @@
     height: auto;
 }
 
+.fileDetailPreviewPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 110px;
+    background: repeating-linear-gradient(
+        45deg,
+        #e8e4d8,
+        #e8e4d8 4px,
+        #d0ccbf 4px,
+        #d0ccbf 8px
+    );
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.06em;
+    user-select: none;
+}
+
+.fileDetailMediaPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    border: 2px solid #1a1a1a;
+    box-shadow:
+        inset 2px 2px 0 #ebe7db,
+        inset -2px -2px 0 #7a7668;
+    background: repeating-linear-gradient(
+        45deg,
+        #e8e4d8,
+        #e8e4d8 4px,
+        #d0ccbf 4px,
+        #d0ccbf 8px
+    );
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.06em;
+    user-select: none;
+}
+
 .fileDetailContent {
     min-width: 0;
 }
