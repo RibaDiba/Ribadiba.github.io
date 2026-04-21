@@ -76,7 +76,8 @@ type RetroIconVariant = "folder" | PortfolioFileType;
 const retroFileVariantClasses: Record<PortfolioFileType, string> = {
     img: styles.iconFileImg,
     code: styles.iconFileCode,
-    paper: styles.iconFilePaper
+    paper: styles.iconFilePaper,
+    game: styles.iconFileCode
 };
 
 const getNodeIconVariant = (node: PortfolioDesktopNode | PortfolioFileNode): RetroIconVariant => {
@@ -130,6 +131,143 @@ const toLinkHref = (value: string) => {
 const toYouTubeEmbedSrc = (url: string): string | null => {
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
     return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+};
+
+// Game Components
+const SnakeGame = () => {
+    const CANVAS_SIZE = 300;
+    const GRID_SIZE = 15;
+    const CELL_SIZE = CANVAS_SIZE / GRID_SIZE;
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [snake, setSnake] = useState([{ x: 7, y: 7 }]);
+    const [food, setFood] = useState({ x: 3, y: 3 });
+    const [direction, setDirection] = useState({ x: 0, y: -1 });
+    const [gameOver, setGameOver] = useState(false);
+    const [score, setScore] = useState(0);
+
+    const moveSnake = useCallback(() => {
+        if (gameOver) return;
+        setSnake((prev) => {
+            const head = prev[0];
+            const newHead = { x: head.x + direction.x, y: head.y + direction.y };
+
+            if (
+                newHead.x < 0 || newHead.x >= GRID_SIZE ||
+                newHead.y < 0 || newHead.y >= GRID_SIZE ||
+                prev.some(seg => seg.x === newHead.x && seg.y === newHead.y)
+            ) {
+                setGameOver(true);
+                return prev;
+            }
+
+            const newSnake = [newHead, ...prev];
+            if (newHead.x === food.x && newHead.y === food.y) {
+                setScore(s => s + 10);
+                setFood({
+                    x: Math.floor(Math.random() * GRID_SIZE),
+                    y: Math.floor(Math.random() * GRID_SIZE)
+                });
+            } else {
+                newSnake.pop();
+            }
+            return newSnake;
+        });
+    }, [direction, food, gameOver]);
+
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            const key = e.key.toLowerCase();
+            const isArrow = ["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key);
+            const isWASD = ["w", "a", "s", "d"].includes(key);
+
+            if (isArrow || isWASD) {
+                e.preventDefault();
+            }
+
+            switch (key) {
+                case "arrowup":
+                case "w":
+                    if (direction.y === 0) setDirection({ x: 0, y: -1 });
+                    break;
+                case "arrowdown":
+                case "s":
+                    if (direction.y === 0) setDirection({ x: 0, y: 1 });
+                    break;
+                case "arrowleft":
+                case "a":
+                    if (direction.x === 0) setDirection({ x: -1, y: 0 });
+                    break;
+                case "arrowright":
+                case "d":
+                    if (direction.x === 0) setDirection({ x: 1, y: 0 });
+                    break;
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        const interval = setInterval(moveSnake, 150);
+        return () => {
+            window.removeEventListener("keydown", handleKey);
+            clearInterval(interval);
+        };
+    }, [moveSnake, direction]);
+
+    useEffect(() => {
+        const ctx = canvasRef.current?.getContext("2d");
+        if (!ctx) return;
+        ctx.fillStyle = "#efece0";
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        
+        // Grid lines
+        ctx.strokeStyle = "#dbd8cc";
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= GRID_SIZE; i++) {
+            ctx.beginPath(); ctx.moveTo(i * CELL_SIZE, 0); ctx.lineTo(i * CELL_SIZE, CANVAS_SIZE); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i * CELL_SIZE); ctx.lineTo(CANVAS_SIZE, i * CELL_SIZE); ctx.stroke();
+        }
+
+        // Food
+        ctx.fillStyle = "#a84e0e";
+        ctx.fillRect(food.x * CELL_SIZE + 2, food.y * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+
+        // Snake
+        ctx.fillStyle = "#1a1a1a";
+        snake.forEach((seg, i) => {
+            if (i === 0) ctx.fillStyle = "#3a6a3a";
+            else ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(seg.x * CELL_SIZE + 1, seg.y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+        });
+    }, [snake, food]);
+
+    const reset = () => {
+        setSnake([{ x: 7, y: 7 }]);
+        setDirection({ x: 0, y: -1 });
+        setGameOver(false);
+        setScore(0);
+    };
+
+    return (
+        <div className="flex flex-col items-center gap-4 p-4 font-mono text-xs">
+            <div className="flex justify-between w-full border-b border-[#7a7668] pb-2">
+                <span>SYSTEM_STATE: {gameOver ? "CRITICAL" : "ACTIVE"}</span>
+                <span>PACKETS: {score}</span>
+            </div>
+            <div className="border-2 border-[#1a1a1a] shadow-inner bg-[#efece0] relative">
+                <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+                {gameOver && (
+                    <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white p-4 text-center">
+                        <p className="font-bold text-red-500 mb-2">SYSTEM_COLLISION</p>
+                        <p className="mb-4">SCORE: {score}</p>
+                        <button onClick={reset} className="underline hover:text-[#ff8a3c]">REBOOT.EXE</button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const GameContainer = ({ gameId }: { gameId: string }) => {
+    if (gameId === "snake") return <SnakeGame />;
+    return <div className="p-4 text-center">404: GAME_NOT_FOUND</div>;
 };
 
 const renderMediaAsset = (asset: PortfolioMediaAsset, index: number) => {
@@ -742,74 +880,93 @@ const DesktopSection = () => {
 
                                         {windowItem.kind === "file" ? (
                                             <article className={styles.fileDetail}>
-                                                <div className={styles.fileDetailPreviewWrapper}>
-                                                    <div className={styles.fileDetailPreview}>
-                                                        {previewImageSrc ? (
-                                                            <button
-                                                                type="button"
-                                                                className={styles.fileDetailPreviewButton}
-                                                                onClick={() => openImageWindow(
-                                                                    previewImageSrc,
-                                                                    previewImage?.alt ?? windowItem.file.data.title,
-                                                                    windowItem.file.data.title
+                                                {windowItem.file.fileType === "game" ? (
+                                                    <div className="col-span-2">
+                                                        <GameContainer gameId={windowItem.file.id} />
+                                                        <div className="mt-4 border-t border-[#7a7668] pt-4">
+                                                            <h3 className={styles.fileDetailTitle}>{windowItem.file.data.title}</h3>
+                                                            <p className="font-mono text-[10px] text-[#5a5a5a] mb-2">{windowItem.file.data.blurb}</p>
+                                                            <div className={styles.fileDetailTags}>
+                                                                {windowItem.file.data.tags.map((item) => (
+                                                                    <span key={item} className={styles.fileDetailTag}>
+                                                                        {item}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div className={styles.fileDetailPreviewWrapper}>
+                                                            <div className={styles.fileDetailPreview}>
+                                                                {previewImageSrc ? (
+                                                                    <button
+                                                                        type="button"
+                                                                        className={styles.fileDetailPreviewButton}
+                                                                        onClick={() => openImageWindow(
+                                                                            previewImageSrc,
+                                                                            previewImage?.alt ?? windowItem.file.data.title,
+                                                                            windowItem.file.data.title
+                                                                        )}
+                                                                    >
+                                                                        <img
+                                                                            src={previewImageSrc}
+                                                                            alt={previewImage?.alt ?? `${windowItem.file.data.title} preview`}
+                                                                            className={styles.fileDetailPreviewImage}
+                                                                        />
+                                                                    </button>
+                                                                ) : (
+                                                                    <>[ project · {windowItem.file.data.title} ]</>
                                                                 )}
-                                                            >
-                                                                <img
-                                                                    src={previewImageSrc}
-                                                                    alt={previewImage?.alt ?? `${windowItem.file.data.title} preview`}
-                                                                    className={styles.fileDetailPreviewImage}
-                                                                />
-                                                            </button>
-                                                        ) : (
-                                                            <>[ project · {windowItem.file.data.title} ]</>
-                                                        )}
-                                                    </div>
-                                                    {previewImageSrc ? (
-                                                        <span className={styles.fileDetailPreviewHint}>click to expand ↗</span>
-                                                    ) : null}
-                                                </div>
-                                                <div className={styles.fileDetailContent}>
-                                                    <h3 className={styles.fileDetailTitle}>{windowItem.file.data.title}</h3>
-
-                                                    <dl className={styles.fileDetailMeta}>
-                                                        <dt className={styles.fileDetailMetaKey}>role</dt>
-                                                        <dd>{windowItem.file.data.role}</dd>
-                                                        <dt className={styles.fileDetailMetaKey}>year</dt>
-                                                        <dd>{windowItem.file.data.year}</dd>
-                                                        <dt className={styles.fileDetailMetaKey}>stack</dt>
-                                                        <dd>{windowItem.file.data.stack.join(", ")}</dd>
-                                                    </dl>
-
-                                                    <div className={styles.fileDetailDescription}>
-                                                        <p>{windowItem.file.data.blurb}</p>
-                                                        {windowItem.file.data.notes ? <p className={styles.fileDetailNotes}>{windowItem.file.data.notes}</p> : null}
-                                                    </div>
-
-                                                    {windowItem.file.data.tags.length > 0 ? (
-                                                        <div className={styles.fileDetailTags}>
-                                                            {windowItem.file.data.tags.map((item) => (
-                                                                <span key={item} className={styles.fileDetailTag}>
-                                                                    {item}
-                                                                </span>
-                                                            ))}
+                                                            </div>
+                                                            {previewImageSrc ? (
+                                                                <span className={styles.fileDetailPreviewHint}>click to expand ↗</span>
+                                                            ) : null}
                                                         </div>
-                                                    ) : null}
+                                                        <div className={styles.fileDetailContent}>
+                                                            <h3 className={styles.fileDetailTitle}>{windowItem.file.data.title}</h3>
 
-                                                    {linkHref ? (
-                                                        <a href={linkHref} target="_blank" rel="noreferrer" className={styles.fileDetailLink}>
-                                                            {windowItem.file.data.link}
-                                                        </a>
-                                                    ) : (
-                                                        <p className={styles.fileDetailLinkFallback}>{windowItem.file.data.link || "—"}</p>
-                                                    )}
+                                                            <dl className={styles.fileDetailMeta}>
+                                                                <dt className={styles.fileDetailMetaKey}>role</dt>
+                                                                <dd>{windowItem.file.data.role}</dd>
+                                                                <dt className={styles.fileDetailMetaKey}>year</dt>
+                                                                <dd>{windowItem.file.data.year}</dd>
+                                                                <dt className={styles.fileDetailMetaKey}>stack</dt>
+                                                                <dd>{windowItem.file.data.stack.join(", ")}</dd>
+                                                            </dl>
 
-                                                    {windowItem.file.data.mediaAssets.length > 0 ? (
-                                                        <div className={styles.fileDetailMediaSection}>
-                                                            <h4 className={styles.fileDetailMediaHeading}>media assets</h4>
-                                                            <div className={styles.fileDetailMediaList}>{windowItem.file.data.mediaAssets.map(renderMediaAsset)}</div>
+                                                            <div className={styles.fileDetailDescription}>
+                                                                <p>{windowItem.file.data.blurb}</p>
+                                                                {windowItem.file.data.notes ? <p className={styles.fileDetailNotes}>{windowItem.file.data.notes}</p> : null}
+                                                            </div>
+
+                                                            {windowItem.file.data.tags.length > 0 ? (
+                                                                <div className={styles.fileDetailTags}>
+                                                                    {windowItem.file.data.tags.map((item) => (
+                                                                        <span key={item} className={styles.fileDetailTag}>
+                                                                            {item}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            ) : null}
+
+                                                            {linkHref ? (
+                                                                <a href={linkHref} target="_blank" rel="noreferrer" className={styles.fileDetailLink}>
+                                                                    {windowItem.file.data.link}
+                                                                </a>
+                                                            ) : (
+                                                                <p className={styles.fileDetailLinkFallback}>{windowItem.file.data.link || "—"}</p>
+                                                            )}
+
+                                                            {windowItem.file.data.mediaAssets.length > 0 ? (
+                                                                <div className={styles.fileDetailMediaSection}>
+                                                                    <h4 className={styles.fileDetailMediaHeading}>media assets</h4>
+                                                                    <div className={styles.fileDetailMediaList}>{windowItem.file.data.mediaAssets.map(renderMediaAsset)}</div>
+                                                                </div>
+                                                            ) : null}
                                                         </div>
-                                                    ) : null}
-                                                </div>
+                                                    </>
+                                                )}
                                             </article>
                                         ) : null}
 

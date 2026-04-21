@@ -1,9 +1,4 @@
-import {
-    retroDesktopPortfolioNodes,
-    type PortfolioFileNode,
-    type PortfolioFolderNode,
-    type PortfolioMediaAsset
-} from "@/stores/RetroDesktopPortfolio";
+import { getAssetPath } from "@/utils/paths";
 
 export interface PosterCardData {
     src: string;
@@ -11,7 +6,6 @@ export interface PosterCardData {
     caption: string;
 }
 
-// Edit this array to control captions by poster order (index-based mapping).
 export const posterCaptionsByOrder: string[] = [
     "PlayStation · 1996",
     "Who are you? · 2002",
@@ -19,22 +13,25 @@ export const posterCaptionsByOrder: string[] = [
     "Just Start · 2006",
 ];
 
-export const defaultPosters: PosterCardData[] = (() => {
-    const playFolder = retroDesktopPortfolioNodes.find(
-        (node): node is PortfolioFolderNode => node.kind === "folder" && node.id === "play"
-    );
-    const postersFile = playFolder?.children.find(
-        (node): node is PortfolioFileNode => node.kind === "file" && node.id === "posters"
-    );
-
-    return (postersFile?.data.mediaAssets ?? [])
-        .filter((asset): asset is PortfolioMediaAsset & { type: "image" } => asset.type === "image")
-        .map((asset, index) => {
-            const alt = asset.alt ?? `poster ${index + 1}`;
-            return {
-                src: asset.src,
-                alt,
-                caption: posterCaptionsByOrder[index] ?? alt.toLowerCase()
-            };
-        });
-})();
+export const defaultPosters: PosterCardData[] = [
+    {
+        src: getAssetPath("/Personal Website/assets/poster-juststart.png"),
+        alt: "Just Start poster",
+        caption: "Just Start · 2006"
+    },
+    {
+        src: getAssetPath("/Personal Website/assets/poster-sony.png"),
+        alt: "Sony DR-11 poster",
+        caption: "Sony DR-11 · 1973"
+    },
+    {
+        src: getAssetPath("/Personal Website/assets/poster-whoareyou.png"),
+        alt: "Who Are You poster",
+        caption: "Who are you? · 2002"
+    },
+    {
+        src: getAssetPath("/Personal Website/assets/poster-god.png"),
+        alt: "Playstation Edge poster",
+        caption: "PlayStation · 1996"
+    }
+];

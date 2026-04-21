@@ -7,7 +7,9 @@ const Home = () => {
         <>
             <HeroSection />
             <BioSection />
-            <DesktopSection />
+            <div className="hidden md:block">
+                <DesktopSection />
+            </div>
         </>
     );
 };

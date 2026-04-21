@@ -181,7 +181,7 @@ const BioSection = ({ className, posters = defaultPosters }: BioSectionProps) =>
                             Reconciled identity query with contextual memory ❯
                         </motion.div>
 
-                        <motion.div key={`typed-sequence-${typingRun}`} initial="hidden" animate="visible" className="flex flex-col gap-8">
+                        <motion.div key={`typed-sequence-${typingRun}`} initial="hidden" whileInView="visible" viewport={inViewOnce} className="flex flex-col gap-8">
                             <motion.div
                                 className="space-y-4 font-serif text-[15px] leading-relaxed text-[#EDEDF0]"
                                 variants={bodyWrapperVariants}
@@ -283,8 +283,28 @@ const BioSection = ({ className, posters = defaultPosters }: BioSectionProps) =>
                 </motion.article>
             </div>
 
+            <div className="overflow-hidden md:hidden w-full">
+                <motion.div
+                    className="inline-flex items-center gap-4"
+                    initial={{ x: 0 }}
+                    animate={{ x: "-50%" }}
+                    transition={{ duration: 30, repeat: Infinity, repeatType: "loop", ease: "linear" }}
+                >
+                    {posters.map((poster, index) => (
+                        <figure key={`carousel-a-${poster.src}-${index}`} className="flex-shrink-0 w-44 aspect-[3/4] overflow-hidden rounded-lg border border-[#2a2a2f] bg-[#111]">
+                            <img src={poster.src} alt={poster.alt} className="h-full w-full object-cover [filter:grayscale(.1)_contrast(1.02)]" />
+                        </figure>
+                    ))}
+                    {posters.map((poster, index) => (
+                        <figure key={`carousel-b-${poster.src}-${index}`} className="flex-shrink-0 w-44 aspect-[3/4] overflow-hidden rounded-lg border border-[#2a2a2f] bg-[#111]">
+                            <img src={poster.src} alt={poster.alt} className="h-full w-full object-cover [filter:grayscale(.1)_contrast(1.02)]" />
+                        </figure>
+                    ))}
+                </motion.div>
+            </div>
+
             <motion.div
-                className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-4 md:grid-cols-4"
+                className="hidden md:grid mx-auto w-full max-w-6xl grid-cols-4 gap-4"
                 initial="hidden"
                 whileInView="visible"
                 viewport={inViewOnce}

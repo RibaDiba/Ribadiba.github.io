@@ -1,6 +1,6 @@
 import { getAssetPath } from "@/utils/paths";
 
-export const portfolioFileTypes = ["img", "code", "paper"] as const;
+export const portfolioFileTypes = ["img", "code", "paper", "game"] as const;
 export type PortfolioFileType = (typeof portfolioFileTypes)[number];
 
 export const portfolioMediaTypes = ["image", "video", "document"] as const;
@@ -83,13 +83,13 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                 kind: 'file',
                 fileType: "code",
                 data: {
-                    title: "Raspberry PI Electric Car",
-                    role: "Developer",
+                    title: "Raspberry Pi Omni-Directional EV",
+                    role: "Lead Systems Developer",
                     year: "2024-2025",
-                    stack: ["Raspberry PI", "ESP32", "C++"],
-                    blurb: "Ridebale PI electric car powered by two 12V Car batteries with omni directional wheels controlled by a Nintendo Joycon Controller",
-                    notes: "Helped with assembly, programming, and testing. Made for the Odessey of the Mind competition.",
-                    tags: ["Pi", "C++", "Embeded Systems"],
+                    stack: ["Raspberry PI", "ESP32", "C++", "Bluetooth HID"],
+                    blurb: "A rideable electric vehicle utilizing a Raspberry Pi and ESP32 architecture for real-time control. Features an omni-directional drivetrain powered by dual 12V lead-acid batteries and integrated with Nintendo Joy-Con controllers via Bluetooth/HID.",
+                    notes: "Engineered for the Odyssey of the Mind competition, focusing on hardware-software integration, power management, and low-latency motor control.",
+                    tags: ["Embedded Systems", "Robotics", "C++"],
                     link: "https://github.com/RibaDiba/pi-electric-car",
                     previewImage: localPreview("/ProjectImages/Pi_Mockup.png", "Car Cad Design"),
                     mediaAssets: [
@@ -103,17 +103,38 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                 kind: 'file',
                 fileType: "code",
                 data: {
-                    title: "Background Display System",
-                    role: "Developer",
+                    title: "Automated Background Display System (BDS)",
+                    role: "Embedded Systems Engineer",
                     year: "2024-2025",
-                    stack: ["ESP32", "C++"],
-                    blurb: "Built a background display system to effecivly swap and showcase backgrounds for a play. Created trangular prisims to store 3 backgrounds per unit.",
-                    notes: "Helped with assembly, programming, and testing. Made for the Odessey of the Mind competition.",
-                    tags: ["C++", "Embeded Systems"],
+                    stack: ["ESP32", "C++", "Stepper Motors"],
+                    blurb: "A distributed embedded system designed for theatrical stage automation. Utilizes ESP32 microcontrollers to synchronize the rotation of high-torque triangular prism units, allowing for seamless transition between three distinct background sets.",
+                    notes: "Developed custom control protocols for precise panel positioning and synchronized multi-unit rotation for the Odyssey of the Mind competition.",
+                    tags: ["C++", "Embedded Systems", "Automation"],
                     link: "https://github.com/RibaDiba/Background-Display-System-Arduino",
-                    previewImage: localPreview("/ProjectImages/Pi_Mockup.png", "Car Cad Design"),
+                    previewImage: localPreview("/ProjectImages/BDS_Cover.png", "BDS Preview"),
                     mediaAssets: [
-                        externalMedia("https://youtu.be/HSFzfCUV7-w", "video", "Electric car demo")
+                        externalMedia("https://youtu.be/J0w5FN1HMhc", "video", "BDS Demo"),
+                        externalMedia("/ProjectImages/BDS_Sketch.jpg", "image", "Sketch of BDS")
+                    ]
+                }
+            }, 
+            {
+                id: "Expandable Shield",
+                label: "Shield.proj",
+                kind: 'file',
+                fileType: "code",
+                data: {
+                    title: "Servo-Actuated Kinetic Shield",
+                    role: "Mechanical & Systems Designer",
+                    year: "2024-2025",
+                    stack: ["ESP32", "C++", "Servo Control"],
+                    blurb: "A mechanical prop featuring a servo-driven expansion mechanism. Built with laser-cut wood and high-tension string rigging, controlled by an ESP32 to provide button-activated, high-speed deployment.",
+                    notes: "Focused on mechanical leverage optimization and integrated embedded triggers for high-performance use.",
+                    tags: ["C++", "Embedded Systems", "Mechatronics"],
+                    link: "",
+                    previewImage: localPreview("/ProjectImages/Shield_Cover.png", "Shield Sketch"),
+                    mediaAssets: [
+                        externalMedia("https://youtu.be/pXhrgKOtZv8", "video", "Shield Demo"),
                     ]
                 }
             }
@@ -126,54 +147,73 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         children: [
             {
                 id: "Leastudo",
-                label: "Leastudo.proj",
+                label: "Lease.proj",
                 kind: "file",
-                fileType: "img",
+                fileType: "code",
                 data: {
                     title: "Leastudo",
-                    role: "Frontend Engineer",
+                    role: "Frontend Architect",
                     year: "2025",
-                    stack: ["Next.js", "Node", "MongoDB"],
-                    blurb: "A subleasing platform for UMD students, built to help students find housing off campus and connect with students who want to sublet their apartment.",
-                    notes: "Helped with UI/UX design and implmented the frontend ",
-                    tags: ["Figma", "Next.js", "Product"],
+                    stack: ["Next.js", "Node", "MongoDB", "Tailwind"],
+                    blurb: "A full-stack subleasing marketplace optimized for the UMD student ecosystem. Features a responsive Next.js frontend integrated with a Node.js/MongoDB backend to streamline off-campus housing discovery and peer-to-peer lease transfers.",
+                    notes: "Spearheaded the UI/UX design system in Figma and implemented the frontend architecture using modern React patterns.",
+                    tags: ["Figma", "Next.js", "Product Design"],
                     link: "Almost Done!",
                     previewImage: localPreview("/ProjectImages/Leastudo_Mockup.png", "Leastudo project preview"),
                     mediaAssets: []
                 }
             },
             {
-                id: "Mitsubishi",
-                label: "Mitsubishi.proj",
+                id: "Recall",
+                label: "Recall.proj",
                 kind: "file",
-                fileType: "img",
+                fileType: "code",
                 data: {
-                    title: "Mitsubishi Electric",
+                    title: "Recall",
                     role: "Full Stack Engineer",
-                    year: "2026—Present",
-                    stack: ["Next.js", "FastAPI", "Shadcn"],
-                    blurb: "Building a tool to optmize, organize, and sustain NDA generation and management for Mitsubishi Electric.Includes features such as an AI helper served through AWS bedrock that interacts with the sharepoint database and a streamlined process for filling out confedntial NDAs. Part of a project between App Dev Club and MEUS.",
-                    notes: "Adapted Figma to changing project requirements, implmented frontend features, and created a streamlined process to fill out NDAs.",
-                    tags: ["Next.js", "FastAPI", "Figma"],
-                    link: "",
-                    previewImage: localPreview("/Personal Website/assets/poster-sony.png", "Mindshift project preview"),
+                    year: "2026",
+                    stack: ["Swift", "ArcFace", "Ollama", "CoreML"],
+                    blurb: "An iOS-native cognitive aid for dementia patients utilizing on-device computer vision. Implements a zero-shot facial recognition framework (ArcFace) and local LLM (Ollama) to identify and provide context for loved ones and caretakers without requiring cloud processing.",
+                    notes: "Awarded Winner at Bitcamp 2026 among 220+ projects. Engineered the on-device inference pipeline and user-centric interface.",
+                    tags: ["Computer Vision", "iOS Development", "Edge AI"],
+                    link: "https://github.com/akhilapnuri/RecallMobileApp",
+                    previewImage: localPreview("/ProjectImages/Recall_Image.png", "Recall Mockup Preview"),
                     mediaAssets: []
                 }
             },
             {
-                id: "pennzoil",
-                label: "Pennzoil.proj",
+                id: "SavRe",
+                label: "SaveRe.proj",
                 kind: "file",
-                fileType: "img",
+                fileType: "code",
                 data: {
-                    title: "Pennzoil Website",
-                    role: "Web / Motion",
+                    title: "SavRe",
+                    role: "Full Stack Developer",
+                    year: "2025",
+                    stack: ["Next.js", "FastAPI", "Tesseract OCR", "Gemini API"],
+                    blurb: "An AI-powered inventory and nutrition management system. Leverages OCR for automated grocery receipt parsing and integrates the Gemini API to generate dynamic recipes based on real-time pantry data and expiration tracking.",
+                    notes: "Developed for HackPrinceton Fall 2025, focusing on data extraction accuracy and generative AI integration.",
+                    tags: ["NLP", "Generative AI", "FastAPI"],
+                    link: "https://github.com/RibaDiba/SaveRe",
+                    previewImage: localPreview("/ProjectImages/SaveRe_Mockup.png", "SavRe Mockup"),
+                    mediaAssets: []
+                }
+            },
+            {
+                id: "Personal Website",
+                label: "PWeb.proj",
+                kind: "file",
+                fileType: "code",
+                data: {
+                    title: "Retro Desktop Portfolio",
+                    role: "Motion & Web Engineer",
                     year: "2024",
-                    stack: ["Webflow", "GSAP"],
-                    blurb: "Rebuild of a product-lineup microsite. Heavier on motion than brief required — in a good way.",
-                    notes: "Paced every scroll beat to the product hero; nothing moves unless it teaches you something.",
-                    tags: ["web", "motion", "brand"],
-                    link: "pennzoil.example →",
+                    stack: ["Next.js", "Framer Motion", "TypeScript"],
+                    blurb: "A retro-inspired interactive desktop environment built with Next.js and Framer Motion. Features a multi-window manager, custom physics-based interactions, and a declarative store-driven architecture.",
+                    notes: "Iteration v3 focusing on advanced motion design and nostalgic computing aesthetics.",
+                    tags: ["Web", "Motion Design", "UX Architecture"],
+                    link: "ribadiba.github.io",
+                    previewImage: localPreview("/ProjectImages/Website_Mockup.png"),
                     mediaAssets: []
                 }
             }
@@ -191,12 +231,12 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                 fileType: "paper",
                 data: {
                     title: "Tumor Multimodal Segmentation",
-                    role: "Undergrad Researcher",
+                    role: "Undergraduate Researcher",
                     year: "2024—Present",
-                    stack: ["Python", "PyTorch", "Detectron2"],
-                    blurb: "Multimodal tumor segmentation, incoperating depth information into a color channel to improve segmentation on tumors in preclincal cancer trials.",
-                    notes: "Currently putting together a paper.",
-                    tags: ["Deep Learning", "Detectron2", "Image Segmentation"],
+                    stack: ["Python", "PyTorch", "Detectron2", "OpenCV"],
+                    blurb: "Researching multimodal deep learning architectures for preclinical tumor analysis. Developed a custom input pipeline that incorporates depth-map telemetry into color-space channels to enhance segmentation precision in complex biological environments.",
+                    notes: "Currently preparing findings for publication; focusing on feature fusion techniques for medical imaging.",
+                    tags: ["Deep Learning", "Medical Imaging", "Computer Vision"],
                     link: "",
                     mediaAssets: []
                 }
@@ -204,45 +244,46 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         ]
     },
     {
-        id: "web",
-        label: "web",
+        id: "SWE",
+        label: "SWE",
         kind: "folder",
         children: [
             {
-                id: "site-v3",
-                label: "site_v3.code",
+                id: "Mitsubishi",
+                label: "Mitsubishi.proj",
                 kind: "file",
                 fileType: "code",
                 data: {
-                    title: "this site, v3",
-                    role: "Design + Build",
-                    year: "2026",
-                    stack: ["HTML", "CSS", "a pinch of JS"],
-                    blurb: "The thing you are on. Started as a wireframe, grew a desktop.",
-                    notes: "Every section is its own aesthetic experiment. The retro desktop is the newest one.",
-                    tags: ["personal", "web"],
-                    link: "github.com/abirmodak/site",
-                    previewImage: localPreview("/Personal Website/screenshots/desktop-current.png", "Site v3 desktop preview"),
+                    title: "Mitsubishi Electric NDA Platform",
+                    role: "Full Stack Engineer",
+                    year: "2026—Present",
+                    stack: ["Next.js", "FastAPI", "AWS Bedrock", "SharePoint"],
+                    blurb: "An enterprise NDA lifecycle management platform developed for Mitsubishi Electric US. Features an RAG assistant powered by AWS Bedrock for SharePoint document querying and a streamlined automated drafting system for legal agreements.",
+                    notes: "Led the frontend development and integrated AWS Bedrock for intelligent document assistance in collaboration with MEUS.",
+                    tags: ["Enterprise SWE", "LLM", "AWS"],
+                    link: "",
+                    previewImage: localPreview("/Personal Website/assets/poster-sony.png", "Mindshift project preview"),
                     mediaAssets: []
                 }
             },
             {
-                id: "tinytools",
-                label: "tinytools.code",
+                id: "Leastudo",
+                label: "Lease.proj",
                 kind: "file",
                 fileType: "code",
                 data: {
-                    title: "tiny tools",
-                    role: "Maker",
-                    year: "ongoing",
-                    stack: ["Svelte", "Canvas", "SVG"],
-                    blurb: "A loose collection of single-purpose web toys — a color picker that argues back, a font-pairing slot machine, etc.",
-                    notes: "Designed as a graveyard for ideas too small to justify a proper project.",
-                    tags: ["toys", "svelte"],
-                    link: "tinytools.example",
+                    title: "Leastudo",
+                    role: "Frontend Architect",
+                    year: "2025",
+                    stack: ["Next.js", "Node", "MongoDB", "Tailwind"],
+                    blurb: "A full-stack subleasing marketplace optimized for the UMD student ecosystem. Features a responsive Next.js frontend integrated with a Node.js/MongoDB backend to streamline off-campus housing discovery and peer-to-peer lease transfers.",
+                    notes: "Spearheaded the UI/UX design system in Figma and implemented the frontend architecture using modern React patterns.",
+                    tags: ["Figma", "Next.js", "Product Design"],
+                    link: "Almost Done!",
+                    previewImage: localPreview("/ProjectImages/Leastudo_Mockup.png", "Leastudo project preview"),
                     mediaAssets: []
                 }
-            }
+            },
         ]
     },
     {
@@ -251,41 +292,19 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         kind: "folder",
         children: [
             {
-                id: "posters",
-                label: "posters.img",
+                id: "snake",
+                label: "snake.exe",
                 kind: "file",
-                fileType: "img",
+                fileType: "game",
                 data: {
-                    title: "poster series",
-                    role: "Designer",
-                    year: "ongoing",
-                    stack: ["Figma", "Risograph"],
-                    blurb: "Late-night riso prints. A few are hanging in friends' apartments which is the only review that counts.",
-                    notes: "Every one is an excuse to try a type pairing I would never ship to a client.",
-                    tags: ["print", "type"],
-                    link: "are.na/abir/posters",
-                    mediaAssets: [
-                        localMedia("/Personal Website/assets/poster-juststart.png", "image", "Just Start poster"),
-                        localMedia("/Personal Website/assets/poster-sony.png", "image", "Sony DR-11 poster"),
-                        localMedia("/Personal Website/assets/poster-whoareyou.png", "image", "Who Are You poster"),
-                        localMedia("/Personal Website/assets/poster-god.png", "image", "Playstation Edge poster")
-                    ]
-                }
-            },
-            {
-                id: "zines",
-                label: "zines.img",
-                kind: "file",
-                fileType: "img",
-                data: {
-                    title: "zines",
-                    role: "Writer / Editor",
-                    year: "2023—",
-                    stack: ["InDesign", "staple gun"],
-                    blurb: "Occasional printed zines for the UMD design collective. 12–24 pages, 50 copies, gone in a week.",
-                    notes: "The best deadline is the one a print shop imposes on you.",
-                    tags: ["print", "writing"],
-                    link: "issuu.com/abir",
+                    title: "Snake: Legacy Edition",
+                    role: "Technical Toy",
+                    year: "2026",
+                    stack: ["React", "Canvas API"],
+                    blurb: "The classic arcade game rebuilt for the retro desktop. Navigate the grid and consume data packets without colliding with the system boundaries.",
+                    notes: "Use arrow keys or WASD to control.",
+                    tags: ["Minigame", "Classic"],
+                    link: "Play Now",
                     mediaAssets: []
                 }
             }
@@ -298,12 +317,12 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         fileType: "paper",
         data: {
             title: "readme.txt",
-            role: "—",
-            year: "—",
-            stack: ["about this desktop"],
-            blurb: "Folders are categories. Files are projects. Drag window title-bars to move them. Click to focus; the focused window gets the orange title-bar.",
-            notes: "Everything is clickable. Nothing is load-bearing.",
-            tags: ["help"],
+            role: "System Overview",
+            year: "2026",
+            stack: ["OS Architecture"],
+            blurb: "Welcome to the interactive portfolio environment. Folders represent domain categories; files represent specific engineering projects. Utilize standard window management paradigms: drag title-bars to relocate, click to focus.",
+            notes: "Non-destructive environment. All windows are virtualized and responsive.",
+            tags: ["System Info"],
             link: "",
             previewImage: localPreview("/PFP.png", "Retro desktop overview"),
             mediaAssets: []
