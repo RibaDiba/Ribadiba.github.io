@@ -61,7 +61,6 @@ const TerminalWindow = () => {
     const lastJokeIdxRef = useRef<number>(-1);
 
     const pickJoke = () => {
-        if (niceTryJokes.length === 1) return niceTryJokes[0];
         let idx = Math.floor(Math.random() * niceTryJokes.length);
         if (idx === lastJokeIdxRef.current) {
             idx = (idx + 1) % niceTryJokes.length;
