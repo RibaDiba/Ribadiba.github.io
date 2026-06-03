@@ -2,8 +2,20 @@
 @plugin "daisyui";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f0f10;
+  --foreground: #e9e9ec;
+
+  /* abir_os design tokens */
+  --abir-bg: #0f0f10;
+  --abir-ink: #e9e9ec;
+  --abir-ink-dim: #7a7a80;
+  --abir-ink-mute: #3a3a40;
+  --abir-accent: #ff7a18;
+  --abir-stroke: #2a2a2f;
+  --abir-mono: var(--font-space-mono), ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  --abir-term: var(--font-jetbrains), ui-monospace, monospace;
+  --abir-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --abir-disp: var(--font-archivo), var(--font-inter), sans-serif;
 }
 
 @theme inline {
@@ -36,15 +48,31 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background:
+    radial-gradient(1200px 600px at 18% -10%, #1b1b1f 0%, transparent 60%),
+    radial-gradient(900px 500px at 112% 115%, #15151a 0%, transparent 55%),
+    var(--abir-bg);
+  color: var(--abir-ink);
+  font-family: var(--abir-sans);
+  margin: 0;
+}
+
+/* lock the desktop OS to a single viewport on md+; mobile still scrolls */
+@media (min-width: 768px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes abir-blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes abir-pop-in {
+  0% { opacity: 0; transform: scale(0.96) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }

@@ -815,3 +815,349 @@
     object-fit: contain;
     border: 1px solid #7a7668;
 }
+
+/* ============ wordmark wallpaper (abir_os) ============ */
+.wordmarkWallpaper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2vh;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.9;
+    z-index: 0;
+}
+
+.wordmarkRow {
+    font-family: var(--abir-disp);
+    font-style: italic;
+    font-size: 13vh;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-align: center;
+    color: transparent;
+    transform: skewX(-6deg);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.035);
+}
+
+.wordmarkRowAlt {
+    -webkit-text-stroke: 1px rgba(255, 122, 24, 0.05);
+}
+
+@media (max-width: 720px) {
+    .wordmarkRow {
+        font-size: 9vh;
+    }
+}
+
+/* keep desktop icons above the wallpaper */
+.desktopIconsGrid {
+    position: relative;
+    z-index: 3;
+}
+
+/* ============ terminal launcher icon art ============ */
+.iconTerminal {
+    width: 44px;
+    height: 38px;
+    margin: 0 auto;
+    background: #0b0b0d;
+    border: 2px solid var(--retro-icon-stroke);
+    border-radius: 3px;
+    box-shadow:
+        inset 0 0 0 2px #2a2a2f,
+        2px 2px 0 var(--retro-icon-shadow);
+    position: relative;
+}
+
+.iconTerminal::after {
+    content: ">_";
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    font-family: var(--retro-icon-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--abir-accent);
+}
+
+/* ============ terminal window ============ */
+.windowTerm {
+    background: #1a1a1a;
+}
+
+.windowTerm .windowBody,
+.windowTermBody {
+    background: #0b0b0c;
+    border: 2px inset #000;
+    padding: 0;
+    overflow: hidden;
+    color: #d8d4cc;
+}
+
+.term {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.termScroll {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 14px 14px;
+    font-family: var(--abir-term);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #d8d4cc;
+}
+
+.termScroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.termScroll::-webkit-scrollbar-thumb {
+    background: #2a2a2f;
+    border: 2px solid #0b0b0c;
+}
+
+.ccBanner {
+    border: 1px solid var(--abir-accent);
+    border-radius: 7px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    color: #cfcbc2;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ccBannerTop {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.ccBannerTop img {
+    width: 15px;
+    height: 15px;
+}
+
+.ccBannerSub {
+    color: #8a857c;
+    font-size: 11.5px;
+}
+
+.ccBannerSub b {
+    color: #b8b3a8;
+    font-weight: 500;
+}
+
+.ccLine {
+    margin: 2px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ccUser {
+    color: #fff;
+}
+
+.ccArrow {
+    color: var(--abir-accent);
+    font-weight: 700;
+}
+
+.ccPath {
+    color: #7aa2ff;
+}
+
+.ccThink {
+    color: var(--abir-accent);
+    margin: 8px 0;
+}
+
+.ccTool {
+    color: #cfcbc2;
+    margin-top: 8px;
+}
+
+.ccToolDot {
+    color: var(--abir-accent);
+}
+
+.ccToolRes {
+    color: #8a857c;
+    margin: 1px 0 4px 0;
+}
+
+.ccResp {
+    color: #e4e0d8;
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+.ccRespDot {
+    color: var(--abir-accent);
+    flex-shrink: 0;
+}
+
+.ccRespText {
+    flex: 1;
+}
+
+.ccRespText b {
+    color: #fff;
+    font-weight: 600;
+}
+
+.ccCont {
+    color: #e4e0d8;
+    margin: 8px 0 0 20px;
+}
+
+.ccCont b {
+    color: #fff;
+    font-weight: 600;
+}
+
+.ccCursor {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    background: var(--abir-accent);
+    vertical-align: -2px;
+    margin-left: 1px;
+    animation: abir-blink-cursor 0.9s steps(1) infinite;
+}
+
+.ccCursorBlock {
+    width: 8px;
+    height: 1.05em;
+}
+
+.ccPromptLine {
+    margin-top: 10px;
+    color: #fff;
+}
+
+.ccInputLine {
+    cursor: text;
+}
+
+.ccInput {
+    outline: none;
+    min-width: 4px;
+    color: #fff;
+    font-family: var(--abir-term);
+    font-size: 12.5px;
+    caret-color: var(--abir-accent);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ccInput[data-empty]::after {
+    content: "type anything · ↵ to send";
+    color: #5a5a5a;
+    font-style: italic;
+    pointer-events: none;
+    margin-left: 2px;
+}
+
+/* ============ notepad (readme) ============ */
+.windowNote .windowBody,
+.windowNoteBody {
+    background: #fffef8;
+    padding: 0;
+    color: #1a1a1a;
+}
+
+.notePad {
+    font-family: var(--abir-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    white-space: pre-wrap;
+    padding: 14px 16px;
+}
+
+.notePad b {
+    color: #000;
+}
+
+.notePad :global(.hl) {
+    color: var(--abir-accent);
+    font-weight: 700;
+}
+
+/* ============ start menu ============ */
+.startMenuAnchor {
+    position: relative;
+}
+
+.startMenu {
+    position: absolute;
+    bottom: 36px;
+    left: 4px;
+    width: 240px;
+    background: #c8c4b8;
+    border: 2px solid #1a1a1a;
+    box-shadow:
+        inset 2px 2px 0 #ebe7db,
+        inset -2px -2px 0 #7a7668,
+        6px 6px 0 rgba(0, 0, 0, 0.45);
+    z-index: 10001;
+    padding: 4px;
+    display: none;
+}
+
+.startMenuOpen {
+    display: block;
+}
+
+.startMenuHead {
+    background: linear-gradient(180deg, #ff8c3a, #c4590e);
+    color: #fff;
+    font-family: var(--retro-icon-mono);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 8px 10px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.startMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    font-family: var(--retro-icon-mono);
+    font-size: 12px;
+    color: #1a1a1a;
+    cursor: pointer;
+}
+
+.startMenuItem:hover,
+.startMenuItem:focus-visible {
+    background: #c4590e;
+    color: #fff;
+    outline: none;
+}
+
+.startMenuSep {
+    height: 1px;
+    margin: 4px 2px;
+    background: #7a7668;
+}

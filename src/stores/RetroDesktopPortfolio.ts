@@ -309,23 +309,5 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                 }
             }
         ]
-    },
-    {
-        id: "about",
-        label: "readme.txt",
-        kind: "file",
-        fileType: "paper",
-        data: {
-            title: "readme.txt",
-            role: "System Overview",
-            year: "2026",
-            stack: ["OS Architecture"],
-            blurb: "Welcome to the interactive portfolio environment. Folders represent domain categories; files represent specific engineering projects. Utilize standard window management paradigms: drag title-bars to relocate, click to focus.",
-            notes: "Non-destructive environment. All windows are virtualized and responsive.",
-            tags: ["System Info"],
-            link: "",
-            previewImage: localPreview("/PFP.png", "Retro desktop overview"),
-            mediaAssets: []
-        }
     }
 ];

@@ -1,12 +1,12 @@
-import BioSection from "@/components/Redesign/BioSection";
+import AbirOSMobile from "@/components/Redesign/AbirOSMobile";
 import DesktopSection from "@/components/Redesign/DesktopSection";
-import HeroSection from "@/components/Redesign/HeroSection";
 
 const Home = () => {
     return (
         <>
-            <HeroSection />
-            <BioSection />
+            <div className="md:hidden">
+                <AbirOSMobile />
+            </div>
             <div className="hidden md:block">
                 <DesktopSection />
             </div>
