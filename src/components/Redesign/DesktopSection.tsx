@@ -10,7 +10,13 @@ import {
     type PortfolioMediaAsset
 } from "@/stores/RetroDesktopPortfolio";
 import { getAssetPath } from "@/utils/paths";
+import ReadmeNotepad from "./ReadmeNotepad";
+import StartMenu from "./StartMenu";
+import TerminalWindow from "./TerminalWindow";
 import styles from "./DesktopSection.module.css";
+
+const TERMINAL_WINDOW_ID = "terminal";
+const NOTEPAD_WINDOW_ID = "notepad";
 
 interface WindowPosition {
     x: number;
@@ -48,7 +54,15 @@ interface ImageWindow extends BaseWindow {
     title: string;
 }
 
-type OpenWindow = FolderWindow | FileWindow | ImageWindow;
+interface TerminalLauncherWindow extends BaseWindow {
+    kind: "terminal";
+}
+
+interface NotepadLauncherWindow extends BaseWindow {
+    kind: "notepad";
+}
+
+type OpenWindow = FolderWindow | FileWindow | ImageWindow | TerminalLauncherWindow | NotepadLauncherWindow;
 
 interface DragState {
     id: string;
@@ -98,6 +112,8 @@ const MIN_WINDOW_HEIGHT = 140;
 const folderWindowSize: WindowSize = { width: 420, height: 300 };
 const fileWindowSize: WindowSize = { width: 700, height: 500 };
 const imageWindowSize: WindowSize = { width: 600, height: 520 };
+const terminalWindowSize: WindowSize = { width: 560, height: 400 };
+const notepadWindowSize: WindowSize = { width: 360, height: 360 };
 const resizeHandles: ResizeDirection[] = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
 const resizeHandleClasses: Record<ResizeDirection, string> = {
     n: styles.resizeHandleN,
@@ -330,12 +346,16 @@ const renderMediaAsset = (asset: PortfolioMediaAsset, index: number) => {
 const getWindowTitle = (windowItem: OpenWindow) => {
     if (windowItem.kind === "folder") return `${windowItem.label} — explorer`;
     if (windowItem.kind === "image") return `${windowItem.label} — preview`;
+    if (windowItem.kind === "terminal") return "claude code — abir@umd: ~";
+    if (windowItem.kind === "notepad") return "readme.txt — notepad";
     return `${windowItem.label} — properties`;
 };
 
-const getWindowStatus = (windowItem: OpenWindow) => {
+const getWindowStatus = (windowItem: OpenWindow): [string, string] => {
     if (windowItem.kind === "folder") return [`${windowItem.folder.children.length} item(s)`, `/abir/${windowItem.folder.label}`];
     if (windowItem.kind === "image") return ["image", windowItem.label];
+    if (windowItem.kind === "terminal") return ["claude code v2", "~"];
+    if (windowItem.kind === "notepad") return ["plain text", "readme.txt"];
     return ["ready", windowItem.label];
 };
 
@@ -358,8 +378,12 @@ const RetroNodeIcon = ({ node, size }: RetroNodeIconProps) => {
 
 const DesktopSection = () => {
     const rootNodes = useMemo(() => retroDesktopPortfolioNodes, []);
+    const folderNodes = useMemo(
+        () => rootNodes.filter((node): node is PortfolioFolderNode => node.kind === "folder"),
+        [rootNodes]
+    );
     const workspaceRef = useRef<HTMLDivElement>(null);
-    const hasAutoOpenedReadmeRef = useRef(false);
+    const hasAutoOpenedRef = useRef(false);
 
     const [windows, setWindows] = useState<OpenWindow[]>([]);
     const [focusedWindowId, setFocusedWindowId] = useState<string | null>(null);
@@ -368,6 +392,7 @@ const DesktopSection = () => {
     const [clock, setClock] = useState(() => new Date());
     const [selectedDesktopNodeId, setSelectedDesktopNodeId] = useState<string | null>(null);
     const [selectedFolderNodeIds, setSelectedFolderNodeIds] = useState<Record<string, string>>({});
+    const [startMenuOpen, setStartMenuOpen] = useState(false);
 
     useEffect(() => {
         const intervalId = window.setInterval(() => setClock(new Date()), 1000);
@@ -375,44 +400,64 @@ const DesktopSection = () => {
     }, []);
 
     useEffect(() => {
-        if (hasAutoOpenedReadmeRef.current) return;
+        if (hasAutoOpenedRef.current) return;
+        hasAutoOpenedRef.current = true;
 
-        const readmeNode = rootNodes.find((node): node is PortfolioFileNode => node.kind === "file" && node.id === "about");
-        if (!readmeNode) return;
-
-        hasAutoOpenedReadmeRef.current = true;
         const timerId = window.setTimeout(() => {
-            setWindows((currentWindows) => {
-                const windowId = `file:${readmeNode.id}`;
-                if (currentWindows.some((windowItem) => windowItem.id === windowId)) return currentWindows;
+            const bounds = workspaceRef.current?.getBoundingClientRect();
+            const dWidth = bounds?.width ?? 1024;
+            const dHeight = bounds?.height ?? 640;
+            const gap = 22;
 
-                const zIndex = nextZIndex(currentWindows);
-                return [
-                    ...currentWindows,
-                    {
-                        id: windowId,
-                        label: readmeNode.label,
-                        kind: "file",
-                        file: readmeNode,
-                        position: (() => {
-                            const bounds = workspaceRef.current?.getBoundingClientRect();
-                            if (!bounds) return createWindowPosition(currentWindows.length);
-                            return {
-                                x: Math.max(0, (bounds.width - fileWindowSize.width) / 2),
-                                y: Math.max(0, (bounds.height - fileWindowSize.height) / 2),
-                            };
-                        })(),
-                        size: { ...fileWindowSize },
-                        zIndex,
-                        minimized: false
-                    }
-                ];
-            });
-            setFocusedWindowId(`file:${readmeNode.id}`);
-        }, 150);
+            const stack = dWidth < 760;
+            const termW = stack ? Math.min(dWidth - 40, 560) : Math.min(560, Math.max(360, dWidth * 0.46));
+            const termH = Math.min(420, Math.max(300, dHeight * 0.62));
+            const noteW = stack ? Math.min(dWidth - 40, 360) : Math.min(360, Math.max(280, dWidth * 0.3));
+            const noteH = Math.min(380, Math.max(280, dHeight * 0.56));
+
+            let termX: number;
+            let termY: number;
+            let noteX: number;
+            let noteY: number;
+            if (stack) {
+                termX = 20;
+                termY = 16;
+                noteX = Math.max(20, dWidth - noteW - 20);
+                noteY = termH - 40;
+            } else {
+                const totalW = termW + gap + noteW;
+                const startX = Math.max(24, (dWidth - totalW) / 2);
+                termX = startX;
+                termY = Math.max(20, (dHeight - termH) / 2 - 10);
+                noteX = startX + termW + gap;
+                noteY = Math.max(20, (dHeight - noteH) / 2 + 14);
+            }
+
+            const terminalWindow: TerminalLauncherWindow = {
+                id: TERMINAL_WINDOW_ID,
+                label: "claude code",
+                kind: "terminal",
+                position: { x: termX, y: termY },
+                size: { width: termW, height: termH },
+                zIndex: 2,
+                minimized: false
+            };
+            const notepadWindow: NotepadLauncherWindow = {
+                id: NOTEPAD_WINDOW_ID,
+                label: "readme.txt",
+                kind: "notepad",
+                position: { x: noteX, y: noteY },
+                size: { width: noteW, height: noteH },
+                zIndex: 1,
+                minimized: false
+            };
+
+            setWindows([notepadWindow, terminalWindow]);
+            setFocusedWindowId(TERMINAL_WINDOW_ID);
+        }, 180);
 
         return () => window.clearTimeout(timerId);
-    }, [rootNodes]);
+    }, []);
 
     useEffect(() => {
         if (!dragState) return;
@@ -623,6 +668,61 @@ const DesktopSection = () => {
         openFileWindow(node);
     };
 
+    const openTerminalWindow = () => {
+        setWindows((currentWindows) => {
+            const existing = currentWindows.find((w) => w.id === TERMINAL_WINDOW_ID);
+            const zIndex = nextZIndex(currentWindows);
+            if (existing) {
+                return currentWindows.map((w) =>
+                    w.id === TERMINAL_WINDOW_ID ? { ...w, minimized: false, zIndex } : w
+                );
+            }
+            return [
+                ...currentWindows,
+                {
+                    id: TERMINAL_WINDOW_ID,
+                    label: "claude code",
+                    kind: "terminal" as const,
+                    position: createWindowPosition(currentWindows.length),
+                    size: { ...terminalWindowSize },
+                    zIndex,
+                    minimized: false
+                }
+            ];
+        });
+        setFocusedWindowId(TERMINAL_WINDOW_ID);
+    };
+
+    const openNotepadWindow = () => {
+        setWindows((currentWindows) => {
+            const existing = currentWindows.find((w) => w.id === NOTEPAD_WINDOW_ID);
+            const zIndex = nextZIndex(currentWindows);
+            if (existing) {
+                return currentWindows.map((w) =>
+                    w.id === NOTEPAD_WINDOW_ID ? { ...w, minimized: false, zIndex } : w
+                );
+            }
+            return [
+                ...currentWindows,
+                {
+                    id: NOTEPAD_WINDOW_ID,
+                    label: "readme.txt",
+                    kind: "notepad" as const,
+                    position: createWindowPosition(currentWindows.length + 1),
+                    size: { ...notepadWindowSize },
+                    zIndex,
+                    minimized: false
+                }
+            ];
+        });
+        setFocusedWindowId(NOTEPAD_WINDOW_ID);
+    };
+
+    const openFolderById = (id: string) => {
+        const folder = folderNodes.find((f) => f.id === id);
+        if (folder) openFolderWindow(folder);
+    };
+
     const clearIconSelections = () => {
         setSelectedDesktopNodeId(null);
         setSelectedFolderNodeIds({});
@@ -714,70 +814,124 @@ const DesktopSection = () => {
     const clockLabel = clock.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const visibleWindows = [...windows].filter((windowItem) => !windowItem.minimized).sort((a, b) => a.zIndex - b.zIndex);
 
+    const handleLauncherSingleClick = (id: string) => setSelectedDesktopNodeId(id);
+    const renderLauncherIcon = (id: string, label: string, iconArtClass: string, onOpen: () => void) => {
+        const selected = selectedDesktopNodeId === id;
+        return (
+            <button
+                key={id}
+                type="button"
+                onClick={(event) => {
+                    event.stopPropagation();
+                    handleLauncherSingleClick(id);
+                }}
+                onDoubleClick={(event) => {
+                    event.stopPropagation();
+                    onOpen();
+                }}
+                onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        onOpen();
+                    }
+                }}
+                className={cn(
+                    "group text-center outline-none transition",
+                    styles.iconSurface,
+                    styles.desktopIconSurface,
+                    selected && styles.desktopIconSurfaceSelected
+                )}
+            >
+                <span aria-hidden="true" className={cn(styles.iconArt, styles.desktopIconArt, iconArtClass)} />
+                <span
+                    className={cn(
+                        styles.iconLabel,
+                        styles.desktopIconLabel,
+                        selected && styles.desktopIconLabelSelected
+                    )}
+                >
+                    {label}
+                </span>
+            </button>
+        );
+    };
+
     return (
-        <section id="projects" className={cn("min-h-screen w-full bg-[#0f0f10] text-[#f4f4f4]", styles.retroDesktopTokens)} aria-label="retro desktop portfolio">
-            <div className="w-full">
-                <div className="relative m-2 flex min-h-screen flex-col overflow-hidden bg-[linear-gradient(180deg,#101113_0%,#15161a_40%,#131419_100%)] sm:m-3">
+        <section
+            id="projects"
+            className={cn("relative h-screen w-full overflow-hidden text-[#f4f4f4]", styles.retroDesktopTokens)}
+            aria-label="abir_os retro desktop"
+        >
+            <div className="relative flex h-full w-full flex-col overflow-hidden">
+                <div
+                    ref={workspaceRef}
+                    onClick={(event) => {
+                        if (event.target === event.currentTarget) {
+                            clearIconSelections();
+                            setStartMenuOpen(false);
+                        }
+                    }}
+                    className={styles.desktop}
+                >
+                    <div className={styles.wordmarkWallpaper} aria-hidden="true">
+                        <div className={styles.wordmarkRow}>ABIR · ABIR · ABIR · ABIR</div>
+                        <div className={cn(styles.wordmarkRow, styles.wordmarkRowAlt)}>RIBA · RIBA · RIBA · RIBA</div>
+                        <div className={styles.wordmarkRow}>ABIR · ABIR · ABIR · ABIR</div>
+                        <div className={cn(styles.wordmarkRow, styles.wordmarkRowAlt)}>RIBA · RIBA · RIBA · RIBA</div>
+                    </div>
+                    <div className={styles.desktopLabel}>abir_os · v3 — double-click to explore</div>
                     <div
-                        ref={workspaceRef}
+                        className={styles.desktopIconsGrid}
                         onClick={(event) => {
                             if (event.target === event.currentTarget) {
                                 clearIconSelections();
                             }
                         }}
-                        className={styles.desktop}
                     >
-                        <div className={styles.desktopLabel}>abir_os · v1.0 — double-click to explore</div>
-                        <div
-                            className={styles.desktopIconsGrid}
-                            onClick={(event) => {
-                                if (event.target === event.currentTarget) {
-                                    clearIconSelections();
-                                }
-                            }}
-                        >
-                            {rootNodes.map((node) => {
-                                const isDesktopIconSelected = selectedDesktopNodeId === node.id;
+                        {rootNodes.map((node) => {
+                            const isDesktopIconSelected = selectedDesktopNodeId === node.id;
 
-                                return (
-                                    <button
-                                        key={node.id}
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            setSelectedDesktopNodeId(node.id);
-                                        }}
-                                        onDoubleClick={(event) => {
-                                            event.stopPropagation();
+                            return (
+                                <button
+                                    key={node.id}
+                                    type="button"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        setSelectedDesktopNodeId(node.id);
+                                    }}
+                                    onDoubleClick={(event) => {
+                                        event.stopPropagation();
+                                        openNode(node);
+                                    }}
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Enter" || event.key === " ") {
+                                            event.preventDefault();
                                             openNode(node);
-                                        }}
-                                        onKeyDown={(event) => {
-                                            if (event.key === "Enter" || event.key === " ") {
-                                                event.preventDefault();
-                                                openNode(node);
-                                            }
-                                        }}
+                                        }
+                                    }}
+                                    className={cn(
+                                        "group text-center outline-none transition",
+                                        styles.iconSurface,
+                                        styles.desktopIconSurface,
+                                        isDesktopIconSelected && styles.desktopIconSurfaceSelected
+                                    )}
+                                >
+                                    <RetroNodeIcon node={node} size="desktop" />
+                                    <span
                                         className={cn(
-                                            "group text-center outline-none transition",
-                                            styles.iconSurface,
-                                            styles.desktopIconSurface,
-                                            isDesktopIconSelected && styles.desktopIconSurfaceSelected
+                                            styles.iconLabel,
+                                            styles.desktopIconLabel,
+                                            isDesktopIconSelected && styles.desktopIconLabelSelected
                                         )}
                                     >
-                                        <RetroNodeIcon node={node} size="desktop" />
-                                        <span
-                                            className={cn(
-                                                styles.iconLabel,
-                                                styles.desktopIconLabel,
-                                                isDesktopIconSelected && styles.desktopIconLabelSelected
-                                            )}
-                                        >
-                                            {node.label}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                        {node.label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                        {renderLauncherIcon("__terminal__", "Claude Code", styles.iconTerminal, openTerminalWindow)}
+                        {renderLauncherIcon("__readme__", "readme.txt", cn(styles.iconFile, styles.iconFilePaper), openNotepadWindow)}
+                    </div>
 
                         {visibleWindows.map((windowItem) => {
                             const isFocused = activeFocusedWindowId === windowItem.id;
@@ -799,7 +953,12 @@ const DesktopSection = () => {
                                         zIndex: windowItem.zIndex
                                     }}
                                     onMouseDown={() => focusWindow(windowItem.id)}
-                                    className={cn(styles.windowFrame, isFocused && styles.windowFrameFocused)}
+                                    className={cn(
+                                        styles.windowFrame,
+                                        isFocused && styles.windowFrameFocused,
+                                        windowItem.kind === "terminal" && styles.windowTerm,
+                                        windowItem.kind === "notepad" && styles.windowNote
+                                    )}
                                 >
                                     <div
                                         onMouseDown={(event) => startDrag(event, windowItem.id)}
@@ -835,7 +994,14 @@ const DesktopSection = () => {
                                         <span><u>H</u>elp</span>
                                     </div>
 
-                                    <div className={cn(styles.windowBody, windowItem.kind === "image" && styles.windowBodyImage)}>
+                                    <div
+                                        className={cn(
+                                            styles.windowBody,
+                                            windowItem.kind === "image" && styles.windowBodyImage,
+                                            windowItem.kind === "terminal" && styles.windowTermBody,
+                                            windowItem.kind === "notepad" && styles.windowNoteBody
+                                        )}
+                                    >
                                         {windowItem.kind === "folder" ? (
                                             <div className={styles.folderFilesGrid}>
                                                 {windowItem.folder.children.map((childNode) => {
@@ -986,6 +1152,10 @@ const DesktopSection = () => {
                                                 />
                                             </div>
                                         ) : null}
+
+                                        {windowItem.kind === "terminal" ? <TerminalWindow /> : null}
+
+                                        {windowItem.kind === "notepad" ? <ReadmeNotepad /> : null}
                                     </div>
 
                                     <div className={styles.windowStatusBar}>
@@ -1007,7 +1177,34 @@ const DesktopSection = () => {
                     </div>
 
                     <footer className={styles.taskbar}>
-                        <button type="button" className={styles.taskbarStart}>Start</button>
+                        <div className={styles.startMenuAnchor}>
+                            <button
+                                type="button"
+                                className={styles.taskbarStart}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    setStartMenuOpen((open) => !open);
+                                }}
+                            >
+                                Start
+                            </button>
+                            <StartMenu
+                                open={startMenuOpen}
+                                folders={folderNodes.map((folder) => ({ id: folder.id, label: folder.label }))}
+                                onOpenTerminal={() => {
+                                    openTerminalWindow();
+                                    setStartMenuOpen(false);
+                                }}
+                                onOpenReadme={() => {
+                                    openNotepadWindow();
+                                    setStartMenuOpen(false);
+                                }}
+                                onOpenFolder={(id) => {
+                                    openFolderById(id);
+                                    setStartMenuOpen(false);
+                                }}
+                            />
+                        </div>
                         <span className={styles.taskbarSeparator} aria-hidden="true" />
 
                         <div className={styles.taskbarItems}>
@@ -1030,7 +1227,6 @@ const DesktopSection = () => {
                         <span className={styles.taskbarClock}>{clockLabel}</span>
                     </footer>
                 </div>
-            </div>
         </section>
     );
 };
