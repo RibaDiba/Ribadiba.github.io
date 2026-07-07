@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Sol.des — design showcase</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sol-showcase.css">
+</head>
+<body>
+
+<!-- ============ 1 — Orbit : slogans + course cards drift across the live sunset field ============ -->
+<div style="position:absolute; left:0; top:0;">
+  <div class="stage-label">1 — <b>orbit</b> · floating slogans and course cards drift across the live shader, standard cards stay grounded</div>
+  <div class="stage">
+    <div class="win">
+      <div class="win-title">
+        <span class="t">Sol.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="sol-stage" style="height:720px;">
+          <canvas id="sol-shader-1" class="sol-shader-bg"></canvas>
+
+          <div style="position:absolute; top:22px; left:50%; transform:translateX(-50%); text-align:center; z-index:6;">
+            <p class="sol-word" style="font-size:26px;">Sol.</p>
+            <p class="sol-sub" style="font-size:13px; margin-top:2px;">Schedule of Classes, Simplified.</p>
+          </div>
+
+          <div class="sol-chip sol-float" style="position:absolute; top:88px; left:34px; z-index:6; --r:-4deg; --dur:7.5s; --delay:.2s;">New horizons with Sol.</div>
+          <div class="sol-chip sol-float" style="position:absolute; top:186px; right:44px; z-index:6; --r:3deg; --dur:6.5s; --delay:.9s;">Stop orbiting Planetterp.</div>
+          <div class="sol-chip sol-float" style="position:absolute; top:436px; left:56px; z-index:6; --r:5deg; --dur:8s; --delay:.4s; border-color:rgba(63,105,102,.35);">A little help from Luna.</div>
+          <div class="sol-chip sol-float" style="position:absolute; top:556px; right:70px; z-index:6; --r:-3deg; --dur:7s; --delay:1.2s;">Eclipsing Venus.</div>
+
+          <div class="sol-course-card sol-float" data-course="CMSC 216" data-professor="Herman, Larry" data-rating="3.15"
+               style="position:absolute; width:204px; top:150px; left:270px; z-index:5; --r:-8deg; --dur:9s; --delay:.1s;"></div>
+          <div class="sol-course-card sol-float" data-course="ENGL 101" data-professor="Forrester, Mark" data-rating="4.94"
+               style="position:absolute; width:194px; top:258px; right:210px; z-index:5; --r:6deg; --dur:7.8s; --delay:.6s;"></div>
+          <div class="sol-course-card sol-float" data-course="MATH 140" data-professor="Schultz, Jason" data-rating="4.93"
+               style="position:absolute; width:212px; top:352px; left:206px; z-index:5; --r:3deg; --dur:8.6s; --delay:.3s;"></div>
+          <div class="sol-course-card sol-float" data-course="PSYC 100" data-professor="Redcay, Elizabeth" data-rating="5.00"
+               style="position:absolute; width:198px; top:462px; right:278px; z-index:5; --r:-5deg; --dur:7s; --delay:1s;"></div>
+          <div class="sol-course-card sol-float" data-course="CMSC 351" data-professor="Mount, David" data-rating="4.83"
+               style="position:absolute; width:208px; top:576px; left:330px; z-index:5; --r:7deg; --dur:9.4s; --delay:.7s;"></div>
+
+          <div class="sol-card" style="position:absolute; bottom:20px; left:22px; width:230px; z-index:7; transform:rotate(-1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Founder &amp; Full-Stack Dev</div>
+              <div class="k">year</div><div>2025—</div>
+              <div class="k">stack</div><div>Next.js · WebGL · TS</div>
+            </div>
+            <div class="tags"><span class="tag">scheduling</span><span class="tag">open-source</span><span class="tag">umd</span></div>
+            <span class="link">github.com/SolUMD →</span>
+          </div>
+
+          <div class="sol-lang-card" style="position:absolute; bottom:20px; right:22px; width:300px; z-index:7; transform:rotate(1deg);">
+            <div class="sws">
+              <span style="background:var(--gold)"></span>
+              <span style="background:var(--coral)"></span>
+              <span style="background:var(--espresso)"></span>
+              <span style="background:var(--teal)"></span>
+            </div>
+            <div>
+              <div class="k">design language</div>
+              <div>Sunset gold into coral over warm cream, Clash Display against wonky Fraunces italics — built to feel like golden hour, not a spreadsheet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Sol.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2 — Field Notes : hero blown up big, annotation chips break down the details ============ -->
+<div style="position:absolute; left:860px; top:0;">
+  <div class="stage-label">2 — <b>field notes</b> · one real hero composition blown up, rebuilt chips annotate around it</div>
+  <div class="stage">
+    <div class="win">
+      <div class="win-title">
+        <span class="t">Sol.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="sol-stage" style="height:760px;">
+          <canvas id="sol-shader-2" class="sol-shader-bg"></canvas>
+
+          <div style="position:absolute; top:30px; left:26px; width:300px; z-index:7;">
+            <h1 class="sol-headline" style="font-size:32px; line-height:1.05;">Schedule of Classes, Simplified.</h1>
+            <p class="sol-sub" style="font-size:19px; margin-top:10px;">Get your perfect Schedule</p>
+            <p class="sol-tag" style="margin-top:4px;">V 1.0.2</p>
+          </div>
+
+          <div style="position:absolute; top:216px; left:26px; z-index:7; display:flex; flex-direction:column; gap:10px;">
+            <button class="sol-btn"><span class="ico"></span>Upload Your Audit</button>
+            <span class="sol-link"><span class="arrow">▾</span>Learn More</span>
+          </div>
+
+          <div class="sol-course-card" data-course="CMSC 132" data-professor="Padua-Perez, Nelson" data-rating="4.24"
+               style="position:absolute; width:232px; min-height:88px; top:36px; right:40px; z-index:5; transform:rotate(4deg);"></div>
+          <div class="sol-course-card" data-course="STAT 100" data-professor="Griffin, Matthew" data-rating="4.04"
+               style="position:absolute; width:212px; min-height:82px; top:150px; right:224px; z-index:4; transform:rotate(-7deg);"></div>
+          <div class="sol-course-card" data-course="CMSC 216" data-professor="Herman, Larry" data-rating="3.15"
+               style="position:absolute; width:224px; min-height:86px; top:262px; right:52px; z-index:5; transform:rotate(6deg);"></div>
+          <div class="sol-course-card" data-course="BSCI 170" data-professor="Cooke, Todd" data-rating="4.16"
+               style="position:absolute; width:204px; min-height:80px; top:376px; right:246px; z-index:4; transform:rotate(-4deg);"></div>
+          <div class="sol-course-card" data-course="PSYC 334" data-professor="Bolger, Donald" data-rating="5.00"
+               style="position:absolute; width:216px; min-height:84px; top:480px; right:82px; z-index:5; transform:rotate(3deg);"></div>
+
+          <div class="sol-anno" style="position:absolute; top:198px; left:340px; z-index:6; transform:rotate(-2deg);">
+            <b>Corner radius 40px</b><span>bottom edge only, hero frame</span>
+          </div>
+          <div class="sol-anno" style="position:absolute; top:346px; left:308px; z-index:6; transform:rotate(2deg);">
+            <b>15 cards dealt</b><span>reshuffled fresh on every load</span>
+          </div>
+          <div class="sol-anno" style="position:absolute; top:470px; left:340px; z-index:6; transform:rotate(-1deg);">
+            <b>Fraunces · WONK 1</b><span>italic subhead axis</span>
+          </div>
+
+          <div class="sol-card" style="position:absolute; bottom:20px; left:26px; width:230px; z-index:7; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Founder &amp; Full-Stack Dev</div>
+              <div class="k">year</div><div>2025—</div>
+              <div class="k">stack</div><div>Next.js · WebGL · TS</div>
+            </div>
+            <div class="tags"><span class="tag">scheduling</span><span class="tag">open-source</span><span class="tag">umd</span></div>
+            <span class="link">github.com/SolUMD →</span>
+          </div>
+
+          <div class="sol-lang-card" style="position:absolute; bottom:20px; right:26px; width:300px; z-index:7; transform:rotate(-1deg);">
+            <div class="sws">
+              <span style="background:var(--gold)"></span>
+              <span style="background:var(--coral)"></span>
+              <span style="background:var(--espresso)"></span>
+              <span style="background:var(--teal)"></span>
+            </div>
+            <div>
+              <div class="k">design language</div>
+              <div>Sunset gold into coral over warm cream, Clash Display against wonky Fraunces italics — built to feel like golden hour, not a spreadsheet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Sol.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 — Filmstrip : the four "how it works" panels cascade like a card fan ============ -->
+<div style="position:absolute; left:0; top:930px;">
+  <div class="stage-label">3 — <b>filmstrip</b> · the four feature panels (New Horizons / Planetterp / Luna / Venus) cascade in sequence</div>
+  <div class="stage">
+    <div class="win">
+      <div class="win-title">
+        <span class="t">Sol.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="sol-stage" style="height:760px;">
+          <canvas id="sol-shader-3" class="sol-shader-bg"></canvas>
+
+          <div class="sol-panel brown" style="position:absolute; width:220px; top:58px; left:14px; z-index:2; transform:rotate(-6deg);">
+            <div class="sol-stepper" data-active-step="1" data-theme="brown"></div>
+            <p class="phead">Stop managing spreadsheets, start managing your course load.</p>
+            <p class="pbody">Parses your degree audit into a semester-by-semester roadmap.</p>
+          </div>
+
+          <div class="sol-panel brown" style="position:absolute; width:220px; top:90px; left:164px; z-index:3; transform:rotate(-2deg);">
+            <div class="sol-stepper" data-active-step="2" data-theme="brown"></div>
+            <p class="phead">Find your Easy A.</p>
+            <p class="pbody">PlanetTerp ratings, GPA data and gen-ed filters in one pass.</p>
+          </div>
+
+          <div class="sol-panel teal" style="position:absolute; width:220px; top:74px; left:314px; z-index:4; transform:rotate(3deg);">
+            <div class="sol-stepper" data-active-step="3" data-theme="teal"></div>
+            <p class="phead">Worried about a popular class? Luna's got you.</p>
+            <p class="pbody">Predicts seat-release odds from years of registration data.</p>
+          </div>
+
+          <div class="sol-panel brown" style="position:absolute; width:220px; top:106px; left:464px; z-index:5; transform:rotate(7deg);">
+            <div class="sol-stepper" data-active-step="4" data-theme="brown"></div>
+            <p class="phead">Let's find your time.</p>
+            <p class="pbody">Generates full-week layouts, ranked by your preferences.</p>
+          </div>
+
+          <div class="sol-course-card sol-float" data-course="BMGT 110" data-professor="Miller, Jeff" data-rating="3.98"
+               style="position:absolute; width:172px; top:355px; left:54px; z-index:2; --r:-7deg; --dur:8.6s; --delay:.4s;"></div>
+          <div class="sol-course-card sol-float" data-course="ECON 305" data-professor="Vincent, Daniel" data-rating="3.13"
+               style="position:absolute; width:168px; top:455px; left:29px; z-index:1; --r:4deg; --dur:9s; --delay:.7s;"></div>
+          <div class="sol-course-card sol-float" data-course="PHYS 260" data-professor="Shawhan, Peter" data-rating="3.79"
+               style="position:absolute; width:174px; top:357px; left:479px; z-index:2; --r:7deg; --dur:9.2s; --delay:.6s;"></div>
+
+          <div class="sol-float" style="position:absolute; top:400px; left:50%; transform:translateX(-50%); z-index:3; text-align:center; --amp:-8px; --dur:9.5s;">
+            <p class="sol-word" style="font-size:72px;">Sol.</p>
+            <p class="sol-sub" style="font-size:20px; margin-top:6px;">Schedule of Classes, Simplified.</p>
+          </div>
+
+          <div class="sol-card sol-float" style="position:absolute; bottom:20px; left:26px; width:230px; z-index:7; --r:-1deg; --amp:-6px; --dur:10.5s; --delay:.4s;">
+            <div class="meta">
+              <div class="k">role</div><div>Founder &amp; Full-Stack Dev</div>
+              <div class="k">year</div><div>2025—</div>
+              <div class="k">stack</div><div>Next.js · WebGL · TS</div>
+            </div>
+            <div class="tags"><span class="tag">scheduling</span><span class="tag">open-source</span><span class="tag">umd</span></div>
+            <span class="link">github.com/SolUMD →</span>
+          </div>
+
+          <div class="sol-lang-card sol-float" style="position:absolute; bottom:20px; right:26px; width:300px; z-index:7; --r:1deg; --amp:-6px; --dur:11.5s; --delay:.7s;">
+            <div class="sws">
+              <span style="background:var(--gold)"></span>
+              <span style="background:var(--coral)"></span>
+              <span style="background:var(--espresso)"></span>
+              <span style="background:var(--teal)"></span>
+            </div>
+            <div>
+              <div class="k">design language</div>
+              <div>Sunset gold into coral over warm cream, Clash Display against wonky Fraunces italics — built to feel like golden hour, not a spreadsheet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Sol.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 — Solar System : the four steps orbit the sun, literally ============ -->
+<div style="position:absolute; left:860px; top:930px;">
+  <div class="stage-label">4 — <b>solar system</b> · the shader becomes a literal sun, "how it works" steps orbit around it</div>
+  <div class="stage">
+    <div class="win">
+      <div class="win-title">
+        <span class="t">Sol.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="sol-stage" style="height:700px;">
+
+          <div class="sol-orbit-ring" style="width:360px; height:360px; left:176px; top:154px; animation: solSpin 60s linear infinite;"></div>
+          <div class="sol-orbit-ring" style="width:230px; height:230px; left:241px; top:219px;"></div>
+
+          <div class="sol-sun" style="width:130px; height:130px; left:50%; top:334px; transform:translate(-50%,-50%); z-index:5;">
+            <canvas id="sol-shader-4" class="sol-shader-bg circle" style="position:absolute; inset:0;"></canvas>
+            <span class="mark" style="font-size:20px;">Sol.</span>
+          </div>
+
+          <div class="sol-orbit-step" style="position:absolute; top:78px; left:50%; transform:translateX(-50%); z-index:6;">
+            <span class="num">1</span>Upload your Audit
+          </div>
+          <div class="sol-orbit-step" style="position:absolute; top:50%; left:534px; transform:translateY(-50%); z-index:6;">
+            <span class="num">2</span>Select Your Gen Eds
+          </div>
+          <div class="sol-orbit-step" style="position:absolute; bottom:64px; left:50%; transform:translateX(-50%); z-index:6;">
+            <span class="num">3</span>Registration Date
+          </div>
+          <div class="sol-orbit-step" style="position:absolute; top:50%; left:18px; transform:translateY(-50%); z-index:6;">
+            <span class="num">4</span>Confirm Your Schedule
+          </div>
+
+          <p class="sol-tag" style="position:absolute; bottom:22px; right:26px; z-index:6; font-size:12px; max-width:210px; text-align:right;">Four steps, one orbit — Testudo in, a finished schedule out.</p>
+
+          <div class="sol-card" style="position:absolute; top:20px; left:20px; width:196px; z-index:7; transform:rotate(-1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Founder &amp; Dev</div>
+              <div class="k">year</div><div>2025—</div>
+              <div class="k">stack</div><div>Next.js · WebGL</div>
+            </div>
+            <div class="tags"><span class="tag">scheduling</span><span class="tag">umd</span></div>
+            <span class="link">github.com/SolUMD →</span>
+          </div>
+
+          <div class="sol-lang-card" style="position:absolute; top:20px; right:20px; width:250px; z-index:7; transform:rotate(1deg);">
+            <div class="sws">
+              <span style="background:var(--gold)"></span>
+              <span style="background:var(--coral)"></span>
+              <span style="background:var(--espresso)"></span>
+              <span style="background:var(--teal)"></span>
+            </div>
+            <div>
+              <div class="k">design language</div>
+              <div>Sunset gold into coral, Clash Display against wonky Fraunces — golden hour, not a spreadsheet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Sol.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 5 — Ledger : one screen rebuilt clean and static ============ -->
+<div style="position:absolute; left:0; top:1830px;">
+  <div class="stage-label">5 — <b>ledger</b> · accurate app buttons + one feature panel rebuilt at full size, no drift</div>
+  <div class="stage">
+    <div class="win">
+      <div class="win-title">
+        <span class="t">Sol.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="sol-stage" style="height:780px;">
+          <canvas id="sol-shader-5" class="sol-shader-bg"></canvas>
+          <div class="sol-shader-wash"></div>
+
+          <div style="position:absolute; top:26px; left:50%; transform:translateX(-50%); z-index:7;">
+            <p class="sol-word" style="font-size:36px; text-align:center;">Sol.</p>
+          </div>
+          <div style="position:absolute; top:96px; left:50%; transform:translateX(-50%); z-index:7; display:flex; gap:10px;">
+            <button class="sol-app-btn" style="transform:rotate(-1deg);"><span class="badge"><span class="ico"></span></span>Upload Your Audit</button>
+            <button class="sol-app-btn" style="transform:rotate(1deg);"><span class="badge"><span class="ico"></span></span>Learn More</button>
+          </div>
+
+          <div class="sol-panel teal" style="position:absolute; top:158px; left:16px; width:680px; height:480px; z-index:6; gap:16px;">
+            <span class="ptitle" style="font-size:14px; letter-spacing:.04em; text-transform:uppercase;">How it works</span>
+            <div class="sol-stepper" data-active-step="3" data-theme="teal"></div>
+            <div style="display:flex; gap:22px; flex:1;">
+              <div class="pcard" style="flex:1; gap:10px;">
+                <div style="font-family:var(--mono); font-size:9px; color:#4f7e8b; letter-spacing:.06em; text-transform:uppercase;">predicted open sections</div>
+                <div class="sol-course-card compact" data-course="CMSC 216" data-professor="Herman, Larry" data-rating="3.15"></div>
+                <div class="sol-course-card compact" data-course="MATH 140" data-professor="Schultz, Jason" data-rating="4.93"></div>
+                <div class="sol-course-card compact" data-course="STAT 100" data-professor="Griffin, Matthew" data-rating="4.04"></div>
+              </div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:14px; justify-content:center;">
+                <p class="phead" style="font-size:22px;">Worried about a popular class? Luna's got you.</p>
+                <p class="pbody" style="font-size:12px; line-height:1.5;">Luna reads years of registration data to estimate seat-release odds for every section — so you know whether you're cooked with Herman, or blessed with Kauffman, before your window even opens.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="sol-card" style="position:absolute; bottom:20px; left:26px; width:230px; z-index:7; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Founder &amp; Full-Stack Dev</div>
+              <div class="k">year</div><div>2025—</div>
+              <div class="k">stack</div><div>Next.js · WebGL · TS</div>
+            </div>
+            <div class="tags"><span class="tag">scheduling</span><span class="tag">open-source</span><span class="tag">umd</span></div>
+            <span class="link">github.com/SolUMD →</span>
+          </div>
+
+          <div class="sol-lang-card" style="position:absolute; bottom:20px; right:26px; width:300px; z-index:7; transform:rotate(-1deg);">
+            <div class="sws">
+              <span style="background:var(--gold)"></span>
+              <span style="background:var(--coral)"></span>
+              <span style="background:var(--espresso)"></span>
+              <span style="background:var(--teal)"></span>
+            </div>
+            <div>
+              <div class="k">design language</div>
+              <div>Sunset gold into coral over warm cream, Clash Display against wonky Fraunces italics — built to feel like golden hour, not a spreadsheet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Sol.des</span></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/sol-shader.js"></script>
+<script src="assets/sol-components.js"></script>
+<script>
+  window.mountSolComponents();
+  ["sol-shader-1","sol-shader-2","sol-shader-3","sol-shader-4","sol-shader-5"].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) window.mountSolShader(el);
+  });
+</script>
+
+</body>
+</html>

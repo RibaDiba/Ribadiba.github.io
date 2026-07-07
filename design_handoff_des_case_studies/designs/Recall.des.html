@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>recall.des — window explorations</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rc-green:#21622D;
+    --rc-deep:#163F1C;
+    --cream:#FAF6ED;
+    --rc-sage:#CFE0C6;
+    --rc-mint:#DCEAD3;
+    --rc-forest:#435D47;
+    --ink:#2A211E;
+    --slate:#4A5565;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  body{ font-family:var(--sans); margin:0; }
+
+  /* ---- canvas scaffolding ---- */
+  .stage-label{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8a8378; margin: 0 0 10px 2px;
+  }
+  .stage-label b{ color:#2A211E }
+  .stage{
+    position:relative;
+    width: 800px;
+    background:
+      radial-gradient(700px 360px at 20% -10%, #1b1b1f 0%, transparent 60%),
+      #101011;
+    border-radius: 16px;
+    padding: 40px;
+    display:flex; align-items:flex-start; justify-content:center;
+  }
+
+  /* ---- retro OS window chrome — matches every other abir_os window ---- */
+  .win{
+    width: 720px;
+    background: #c8c4b8;
+    border: 2px solid #1a1a1a;
+    box-shadow: inset 2px 2px 0 #ebe7db, inset -2px -2px 0 #7a7668, 6px 6px 0 rgba(0,0,0,.45);
+    display: flex; flex-direction: column;
+    font-family: 'Trebuchet MS', Verdana, sans-serif;
+  }
+  .win-title{
+    height: 26px;
+    background: linear-gradient(180deg, #ff8c3a 0%, #c4590e 100%);
+    color: #fff;
+    display:flex; align-items:center; padding: 0 4px 0 8px; gap: 6px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase;
+    cursor: move; user-select: none; border-bottom: 2px solid #1a1a1a;
+  }
+  .win-title .t{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .win-title .btns{ display:flex; gap:3px }
+  .win-title .wbtn{
+    width: 18px; height: 16px; background:#c8c4b8; border:1.5px solid #1a1a1a;
+    box-shadow: inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668;
+    display:grid; place-items:center; font-family:var(--mono); font-size:10px; color:#1a1a1a;
+    cursor:pointer; padding:0; line-height:1;
+  }
+  .win-menu{
+    height:20px; background:#c8c4b8; display:flex; align-items:center; gap:12px; padding:0 8px;
+    font-family: var(--mono); font-size:11px; color:#1a1a1a; border-bottom:1px solid #7a7668;
+  }
+  .win-menu span u{ text-decoration:underline }
+  .win-body{
+    flex:1; background:#efece0; border:2px inset #9a9688; margin:4px; padding:10px; overflow:auto; position:relative;
+  }
+  .win.win-des .win-body{
+    background:
+      radial-gradient(440px 400px at 2% -10%, rgba(33,98,45,.62) 0%, rgba(33,98,45,.62) 22%, transparent 56%),
+      radial-gradient(380px 340px at 100% 106%, rgba(207,224,198,.9) 0%, rgba(207,224,198,.9) 20%, transparent 54%),
+      radial-gradient(280px 260px at 85% 6%, rgba(67,93,71,.4) 0%, transparent 58%),
+      radial-gradient(320px 280px at -8% 96%, rgba(220,234,211,.8) 0%, transparent 54%),
+      radial-gradient(260px 240px at 55% 45%, rgba(33,98,45,.16) 0%, transparent 60%),
+      var(--cream);
+    padding:0;
+  }
+  .win-status{
+    height:18px; background:#c8c4b8; border-top:1px solid #7a7668;
+    display:flex; align-items:center; padding:0 8px;
+    font-family:var(--mono); font-size:10px; color:#3a3a3a; justify-content:space-between;
+  }
+
+  /* ---- content atoms: style only, position is set per-instance ---- */
+  .ls-stage{ position:relative; width:100%; overflow:hidden; }
+  @keyframes lsEnter{
+    from{ opacity:0; translate:0 46px; scale:.92; }
+    to{ opacity:1; translate:0 0; scale:1; }
+  }
+  .ls-enter{ animation: lsEnter .62s cubic-bezier(.34,1.56,.64,1) both; }
+  .ls-headline{ font-family:var(--sans); font-weight:800; letter-spacing:-.02em; margin:0; }
+  .ls-headline.red{ color:var(--rc-green); font-size:27px; line-height:1.05; }
+  .ls-headline.ink{ color:var(--ink); font-size:23px; line-height:1.05; margin-top:1px; }
+  .ls-sub{ font-family:var(--sans); font-size:12px; line-height:1.4; margin:9px 0 0; color:var(--ink); }
+  .ls-sub b{ color:var(--rc-green); font-weight:700; }
+
+  .ls-btn{
+    display:flex; align-items:center; gap:7px; border:none; border-radius:10px;
+    padding:9px 14px; font-family:var(--sans); font-weight:700; font-size:12px; color:#fff; cursor:pointer;
+    box-shadow: 0 12px 20px -9px rgba(0,0,0,.4); white-space:nowrap;
+    transition: scale .4s cubic-bezier(.34,1.8,.64,1), translate .4s cubic-bezier(.34,1.8,.64,1), box-shadow .3s ease;
+  }
+  .ls-btn:hover{ scale:1.08; translate:0 -4px; box-shadow: 0 20px 30px -10px rgba(0,0,0,.5); }
+  .ls-btn:active{ scale:.95; translate:0 -1px; box-shadow: 0 8px 14px -8px rgba(0,0,0,.4); }
+  .ls-btn.primary{ background: var(--rc-deep); }
+  .ls-btn.secondary{ background:#7d7676; }
+  .ls-btn .ico{ width:14px; height:14px; border:1.5px solid #fff; border-radius:4px; position:relative; flex-shrink:0; }
+  .ls-btn .ico.plus::before{ content:""; position:absolute; left:50%; top:3px; bottom:3px; width:1.5px; background:#fff; transform:translateX(-50%); }
+  .ls-btn .ico.plus::after{ content:""; position:absolute; top:50%; left:3px; right:3px; height:1.5px; background:#fff; transform:translateY(-50%); }
+  .ls-btn .ico.mag{ border-radius:50%; }
+  .ls-btn .ico.mag::after{ content:""; position:absolute; width:7px; height:1.5px; background:#fff; bottom:-3px; right:-3px; transform:rotate(45deg); }
+  .ls-btn .ico.phone{ border:none; background:none; }
+  .ls-btn .ico.phone svg{ width:100%; height:100%; display:block; }
+
+  /* ---- accurate in-app button (cream card + circular icon badge), scaled down for the collage ---- */
+  .rc-app-btn{
+    display:flex; align-items:center; gap:8px; background:var(--cream);
+    border:1.5px solid #ddd6c8; border-radius:14px; padding:7px 16px 7px 7px;
+    font-family:var(--sans); font-weight:800; font-size:13px; color:var(--ink);
+    box-shadow:0 12px 20px -11px rgba(0,0,0,.3);
+    transition: scale .4s cubic-bezier(.34,1.8,.64,1), translate .4s cubic-bezier(.34,1.8,.64,1);
+  }
+  .rc-app-btn:hover{ scale:1.06; translate:0 -3px; }
+  .rc-app-btn .badge{ width:28px; height:28px; border-radius:50%; background:var(--rc-green); display:grid; place-items:center; flex-shrink:0; }
+  .rc-app-btn .badge svg{ width:14px; height:14px; }
+
+  .ls-palette{
+    display:flex; gap:6px; background: rgba(255,255,255,.68);
+    padding:7px 9px; border-radius:10px; box-shadow:0 10px 20px -10px rgba(0,0,0,.28);
+  }
+  .ls-palette .sw{ width:18px; height:18px; border-radius:5px; box-shadow:0 3px 6px -2px rgba(0,0,0,.35); }
+
+  /* ---- info card: styled like the meta/tags/link block in the retro .proj-detail windows ---- */
+  .ls-card{
+    font-family:'Trebuchet MS', Verdana, sans-serif;
+    font-size:11px; line-height:1.5; color:#1a1a1a;
+    background:#efece0; border:2px solid #1a1a1a;
+    padding:10px 12px; box-shadow:4px 4px 0 rgba(0,0,0,.35);
+    transition: translate .35s cubic-bezier(.34,1.6,.64,1);
+  }
+  .ls-card:hover{ translate:0 -3px; }
+  .ls-card .meta{ display:grid; grid-template-columns:auto 1fr; gap:2px 8px; margin-bottom:8px; }
+  .ls-card .k{ font-size:9px; text-transform:uppercase; letter-spacing:.06em; color:#5a5a5a; }
+  .ls-card .tags{ display:flex; flex-wrap:wrap; gap:4px; margin:8px 0; }
+  .ls-card .tag{
+    font-family:var(--mono); font-size:9px; text-transform:uppercase;
+    background:#fff; border:1px solid #1a1a1a; padding:2px 6px; box-shadow:2px 2px 0 rgba(0,0,0,.2);
+    transition: scale .3s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ls-card .tag:hover{ scale:1.14; }
+  .ls-card .link{
+    font-family:var(--mono); font-size:10px; color:#0055aa; text-decoration:underline;
+    cursor:pointer; display:inline-block; margin-top:2px;
+    transition: scale .3s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ls-card .link:hover{ scale:1.12; }
+
+  .ls-photo{
+    border-radius:9px; display:block; box-shadow:0 18px 30px -12px rgba(0,0,0,.4);
+    transition: scale .4s cubic-bezier(.34,1.6,.64,1), translate .4s cubic-bezier(.34,1.6,.64,1), box-shadow .35s ease;
+  }
+  .ls-photo:hover{ scale:1.06; translate:0 -8px; box-shadow:0 28px 42px -14px rgba(0,0,0,.5); }
+  .ls-photo.fade{
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  }
+
+  .ls-wordmark{ font-family:var(--sans); font-weight:900; font-size:44px; letter-spacing:-.02em; color:var(--rc-green); margin:0; text-align:center; }
+  .ls-placeholder{
+    font-family:var(--mono); font-size:10px; letter-spacing:.05em; text-transform:uppercase;
+    color: rgba(47,82,51,.6); text-align:center; border:1.5px dashed rgba(47,82,51,.45);
+    border-radius:10px; padding:11px 16px;
+  }
+
+  /* ---- glow used behind the full composite hero (var 1) ---- */
+  .rc-halo{
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle, rgba(207,224,198,.85) 0%, rgba(207,224,198,0) 70%);
+  }
+
+  /* ---- rebuilt mini screen mockups (var 2 / accents in 3 & 4) — no raster, pure HTML/CSS ---- */
+  .rc-screen{
+    width:154px; aspect-ratio: 9/18.5; background:var(--cream);
+    border:2.5px solid var(--ink); border-radius:22px; padding:11px 9px;
+    box-shadow:0 16px 26px -12px rgba(0,0,0,.4);
+    display:flex; flex-direction:column; gap:6px; overflow:hidden;
+    font-family:var(--sans); color:var(--ink);
+    transition: scale .4s cubic-bezier(.34,1.6,.64,1), translate .4s cubic-bezier(.34,1.6,.64,1);
+  }
+  .rc-screen:hover{ scale:1.05; translate:0 -6px; }
+  .rc-screen .rc-clock{ font-family:var(--mono); font-size:7px; color:#8a8378; margin-bottom:1px; }
+  .rc-screen h4{ margin:0; font-size:13px; font-weight:800; letter-spacing:-.01em; }
+  .rc-screen p.rc-d{ margin:0; font-size:7px; line-height:1.35; color:#5a5248; }
+  .rc-row{
+    display:flex; align-items:center; gap:6px; background:var(--rc-deep); color:#fff;
+    border-radius:7px; padding:5px 7px; font-size:8px; font-weight:700;
+  }
+  .rc-row.ghost{ background:transparent; border:1.3px solid #cfc9ba; color:var(--ink); }
+  .rc-dot{ width:14px; height:14px; border-radius:50%; background:var(--rc-green); flex-shrink:0; position:relative; }
+  .rc-dot::before{ content:""; position:absolute; inset:4px; border:1.2px solid #fff; border-radius:50%; }
+  .rc-foot{ margin-top:auto; background:var(--rc-deep); color:#fff; text-align:center; font-size:7.5px; font-weight:700; border-radius:6px; padding:5px; }
+  .rc-mem-row{ display:flex; align-items:center; gap:5px; padding:4px 0; border-bottom:1px dashed #d8d2c4; }
+  .rc-avatar{ width:16px; height:16px; border-radius:50%; background:#c7b9a8; flex-shrink:0; }
+  .rc-mem-row .nm{ font-size:7.5px; font-weight:700; }
+  .rc-mem-row .rl{ font-size:6.5px; color:#8a8378; }
+  .rc-chip-sq{ width:12px; height:12px; border-radius:3px; margin-left:auto; }
+  .rc-cam{
+    flex:1; border-radius:10px; position:relative; overflow:hidden;
+    background: repeating-linear-gradient(115deg, #3b5a3f 0 6px, #34523a 6px 12px);
+    display:flex; align-items:flex-end;
+  }
+  .rc-cam .rc-box{ position:absolute; top:38%; left:32%; width:34%; height:26%; border:1.3px solid #7CFC9A; border-radius:3px; }
+  .rc-cam .rc-band{ width:100%; background:rgba(31,58,34,.88); padding:6px 7px 7px; color:#fff; }
+  .rc-cam .rc-band .nm{ font-size:9px; font-weight:800; }
+  .rc-cam .rc-band .rl{ font-size:6.5px; opacity:.85; margin-top:1px; }
+
+  /* ---- floating annotation chips (var 3 / var 4 accents) ---- */
+  .rc-chip{
+    background:#efece0; border:2px solid var(--ink); border-radius:8px;
+    box-shadow:3px 3px 0 rgba(0,0,0,.3); padding:7px 9px;
+    font-family:'Trebuchet MS', Verdana, sans-serif; font-size:10px; color:#1a1a1a;
+    display:flex; align-items:center; gap:7px;
+    transition: scale .35s cubic-bezier(.34,1.6,.64,1);
+  }
+  .rc-chip:hover{ scale:1.06; }
+  .rc-chip .rc-avatars{ display:flex; }
+  .rc-chip .rc-avatars .rc-avatar{ margin-left:-6px; border:1.5px solid #efece0; }
+  .rc-chip .rc-avatars .rc-avatar:first-child{ margin-left:0; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 — Halo Frame (phone renderings, used whole/uncropped) ============ -->
+<div style="position:absolute; left:0; top:0;">
+  <div class="stage-label">1 — <b>halo frame</b> · full composite render, uncropped, glowing behind the case-study copy</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">Recall.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:700px;">
+
+          <div class="rc-halo" style="width:520px; height:520px; right:-140px; top:70px; z-index:1;"></div>
+
+          <div style="position:absolute; top:26px; left:26px; width:230px; z-index:6;">
+            <h1 class="ls-headline red">Forgetting Faces?</h1>
+            <h1 class="ls-headline ink">Recall Remembers For You</h1>
+            <p class="ls-sub"><b>Point the camera</b> and instantly know who's in front of you — name, relation, last memory.</p>
+          </div>
+
+          <div style="position:absolute; top:178px; left:26px; z-index:6; display:flex; flex-direction:column; gap:9px;">
+            <button class="ls-btn primary" style="transform:rotate(-2deg);"><span class="ico plus"></span>Use Camera</button>
+            <button class="ls-btn secondary" style="transform:rotate(1.5deg);"><span class="ico mag"></span>Call for Help</button>
+          </div>
+
+          <div class="ls-palette" style="position:absolute; top:268px; left:42px; z-index:5; transform:rotate(-2deg);">
+            <div class="sw" style="background:#2F5233"></div>
+            <div class="sw" style="background:#CFE0C6"></div>
+            <div class="sw" style="background:#4A5565"></div>
+            <div class="sw" style="background:#2A211E"></div>
+            <div class="sw" style="background:#F6F0E7; border:1px solid rgba(0,0,0,.15)"></div>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:328px; left:26px; width:228px; z-index:6; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Product Designer &amp; Engineer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>SwiftUI · CoreML · Firebase</div>
+            </div>
+            <div class="tags"><span class="tag">health</span><span class="tag">mobile</span><span class="tag">accessibility</span></div>
+            <span class="link">recall.example →</span>
+          </div>
+
+          <img class="ls-photo" src="assets/recall-hero-full.png" style="position:absolute; width:560px; right:-56px; bottom:-30px; transform:rotate(-2deg); z-index:3;">
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Recall.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2 — Screen Ledger (UI elements rebuilt, no raster at all) ============ -->
+<div style="position:absolute; left:880px; top:0;">
+  <div class="stage-label">2 — <b>screen ledger</b> · one full screenshot render, accurate app buttons above it, static (no entrance animation)</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">Recall.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:560px;">
+
+          <div style="position:absolute; top:28px; left:50%; transform:translateX(-50%); z-index:6;">
+            <h1 class="ls-wordmark">Recall</h1>
+          </div>
+
+          <div style="position:absolute; top:104px; left:50%; transform:translateX(-50%); z-index:6; display:flex; gap:10px;">
+            <button class="rc-app-btn" style="transform:rotate(-1deg);"><span class="badge"><svg viewBox="0 0 24 24" fill="none"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="#fff" stroke-width="1.6"/></svg></span>Use Camera</button>
+            <button class="rc-app-btn" style="transform:rotate(1deg);"><span class="badge"><svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>Call for Help</button>
+          </div>
+
+          <img src="assets/recall-v2-hero-full.png" style="position:absolute; width:680px; left:11px; top:117px; z-index:4; box-shadow:none; transition:none;">
+
+          <div class="ls-card" style="position:absolute; top:380px; left:39px; width:301px; height:132px; z-index:6; transform:rotate(-1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Product Designer &amp; Engineer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>SwiftUI · CoreML · Firebase</div>
+            </div>
+            <div class="tags"><span class="tag">health</span><span class="tag">mobile</span><span class="tag">accessibility</span></div>
+            <span class="link">recall.example →</span>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:420px; left:359px; width:301px; height:101px; z-index:5; transform:rotate(1deg); display:flex; align-items:center; gap:11px;">
+            <div style="display:flex; gap:4px; flex-shrink:0;">
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--rc-green); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--cream); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--rc-forest); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+            </div>
+            <div>
+              <div class="k" style="margin-bottom:3px;">design language</div>
+              <div>Forest green &amp; warm cream, familiar faces held gently — a system built to feel calm, not clinical.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Recall.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 — Field Notes (one blown-up photo hero + rebuilt annotation chips) ============ -->
+<div style="position:absolute; left:0; top:900px;">
+  <div class="stage-label">3 — <b>field notes</b> · one real screen blown up big, small rebuilt chips annotate around it</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">Recall.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:720px;">
+
+          <div style="position:absolute; top:26px; left:26px; width:224px; z-index:7;">
+            <h1 class="ls-headline red">Forgetting Faces?</h1>
+            <h1 class="ls-headline ink">Recall Remembers For You</h1>
+            <p class="ls-sub"><b>Point the camera</b> and instantly know who's in front of you — name, relation, last memory.</p>
+          </div>
+
+          <div style="position:absolute; top:172px; left:26px; z-index:7; display:flex; flex-direction:column; gap:9px;">
+            <button class="ls-btn primary" style="transform:rotate(-1.5deg);"><span class="ico plus"></span>Use Camera</button>
+            <button class="ls-btn secondary" style="transform:rotate(1.5deg);"><span class="ico mag"></span>Call for Help</button>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:262px; left:26px; width:224px; z-index:6; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Product Designer &amp; Engineer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>SwiftUI · CoreML · Firebase</div>
+            </div>
+            <div class="tags"><span class="tag">health</span><span class="tag">mobile</span><span class="tag">accessibility</span></div>
+            <span class="link">recall.example →</span>
+          </div>
+
+          <div class="rc-chip" style="position:absolute; top:454px; left:34px; z-index:6; transform:rotate(-2deg);">
+            <div class="rc-avatars">
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+            </div>
+            <div><div style="font-weight:700; font-size:10px;">3 people recognized</div><div style="font-size:8.5px; color:#5a5248;">Abir · amie z · Akhila</div></div>
+          </div>
+
+          <div class="rc-chip" style="position:absolute; top:520px; left:64px; z-index:6; transform:rotate(2deg);">
+            <span class="rc-dot" style="width:16px; height:16px;"></span>
+            <div><div style="font-weight:700; font-size:10px;">Read Aloud</div><div style="font-size:8.5px; color:#5a5248;">On by default</div></div>
+          </div>
+
+          <img class="ls-photo fade" src="assets/recall-phone-4.png" style="position:absolute; width:360px; right:20px; top:14px; transform:rotate(3deg); z-index:5;">
+
+          <div class="ls-palette" style="position:absolute; bottom:24px; left:44px; z-index:6; transform:rotate(-2deg);">
+            <div class="sw" style="background:#2F5233"></div>
+            <div class="sw" style="background:#CFE0C6"></div>
+            <div class="sw" style="background:#4A5565"></div>
+            <div class="sw" style="background:#2A211E"></div>
+            <div class="sw" style="background:#F6F0E7; border:1px solid rgba(0,0,0,.15)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Recall.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 — Signal Stack (multiple photos cascading + rebuilt element woven in) ============ -->
+<div style="position:absolute; left:880px; top:900px;">
+  <div class="stage-label">4 — <b>signal stack</b> · real screens cascade down the right column, a rebuilt chip woven between them</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">Recall.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:760px;">
+
+          <div class="ls-enter" style="position:absolute; top:26px; left:26px; width:340px; z-index:7; animation-delay:0s;">
+            <h1 class="ls-headline red">Forgetting Faces?</h1>
+            <h1 class="ls-headline ink">Recall Remembers For You</h1>
+            <p class="ls-sub"><b>Point the camera</b> and instantly know who's in front of you — name, relation, last memory.</p>
+          </div>
+
+          <div class="ls-enter" style="position:absolute; top:150px; left:26px; z-index:7; display:flex; gap:9px; animation-delay:.08s;">
+            <button class="ls-btn primary" style="transform:rotate(-2deg);"><span class="ico plus"></span>Use Camera</button>
+            <button class="ls-btn secondary" style="transform:rotate(1.5deg);"><span class="ico mag"></span>Call for Help</button>
+          </div>
+
+          <div class="ls-card ls-enter" style="position:absolute; top:222px; left:26px; width:236px; z-index:6; transform:rotate(-1deg); animation-delay:.16s;">
+            <div class="meta">
+              <div class="k">role</div><div>Product Designer &amp; Engineer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>SwiftUI · CoreML · Firebase</div>
+            </div>
+            <div class="tags"><span class="tag">health</span><span class="tag">mobile</span><span class="tag">accessibility</span></div>
+            <span class="link">recall.example →</span>
+          </div>
+
+          <div class="ls-palette ls-enter" style="position:absolute; top:400px; left:44px; z-index:6; transform:rotate(-2deg); animation-delay:.22s;">
+            <div class="sw" style="background:#2F5233"></div>
+            <div class="sw" style="background:#CFE0C6"></div>
+            <div class="sw" style="background:#4A5565"></div>
+            <div class="sw" style="background:#2A211E"></div>
+            <div class="sw" style="background:#F6F0E7; border:1px solid rgba(0,0,0,.15)"></div>
+          </div>
+
+          <div class="rc-chip ls-enter" style="position:absolute; top:466px; left:30px; z-index:6; transform:rotate(2deg); animation-delay:.28s;">
+            <span class="rc-dot" style="width:16px; height:16px;"></span>
+            <div><div style="font-weight:700; font-size:10px;">Read Aloud</div><div style="font-size:8.5px; color:#5a5248;">On by default</div></div>
+          </div>
+
+          <img class="ls-photo fade ls-enter" src="assets/recall-phone-1.png" style="position:absolute; width:212px; right:322px; top:24px; transform:rotate(-6deg); z-index:3; animation-delay:.34s;">
+          <img class="ls-photo fade ls-enter" src="assets/recall-phone-3.png" style="position:absolute; width:236px; right:60px; top:96px; transform:rotate(4deg); z-index:4; animation-delay:.4s;">
+          <img class="ls-photo fade ls-enter" src="assets/recall-phone-4.png" style="position:absolute; width:246px; right:190px; top:352px; transform:rotate(-3deg); z-index:5; animation-delay:.46s;">
+
+          <div class="rc-chip ls-enter" style="position:absolute; bottom:34px; left:110px; z-index:7; transform:rotate(-2deg); animation-delay:.52s;">
+            <div class="rc-avatars">
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+              <span class="rc-avatar" style="width:18px; height:18px;"></span>
+            </div>
+            <div><div style="font-weight:700; font-size:10px;">3 people recognized</div><div style="font-size:8.5px; color:#5a5248;">Abir · amie z · Akhila</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>Recall.des</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

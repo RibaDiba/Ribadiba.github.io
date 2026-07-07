@@ -12,11 +12,7 @@ const escapeHtml = (value: string) =>
         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string)
     );
 
-interface StreamOptions {
-    cancelled: () => boolean;
-    cps: number;
-    scrollEl: HTMLElement;
-}
+import type { StreamOptions } from "@/interfaces/terminal";
 
 async function streamHTML(target: HTMLElement, html: string, { cancelled, cps, scrollEl }: StreamOptions) {
     const tokens: Array<{ tag?: string; ch?: string }> = [];

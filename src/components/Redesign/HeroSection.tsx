@@ -9,19 +9,8 @@ import {
     inViewOnce
 } from "./motionPresets";
 
-export interface HeroWordmarkRow {
-    word: string;
-    tone?: "primary" | "muted";
-}
-
-export interface HeroSectionProps {
-    className?: string;
-    topbarText?: string;
-    modeText?: string;
-    noteText?: string;
-    rows?: readonly HeroWordmarkRow[];
-    repeatCount?: number;
-}
+import type { HeroSectionProps, HeroWordmarkRow } from "@/interfaces/hero";
+export type { HeroSectionProps, HeroWordmarkRow };
 
 const defaultRows: readonly HeroWordmarkRow[] = [
     { word: "RIBA", tone: "muted" },
@@ -90,7 +79,7 @@ const HeroSection = ({
             className={cn("relative min-h-screen overflow-hidden px-4 py-8 text-[#E9E9EC] sm:px-8 lg:px-12", className)}
             style={{
                 background:
-                    "radial-gradient(1200px 600px at 20% -10%, #1a1a1d 0%, transparent 60%), radial-gradient(800px 400px at 110% 20%, #141416 0%, transparent 50%), #0f0f10"
+                    "#0f0f10"
             }}
             aria-label="hero section"
         >

@@ -21,16 +21,19 @@ const toLinkHref = (value: string) => {
     return null;
 };
 
-interface ProjectSheetProps {
-    file: PortfolioFileNode;
+import type { ProjectSheetProps } from "@/interfaces/mobile";
+
+const SheetShell = ({
+    label,
+    onClose,
+    children,
+    bodyClassName
+}: {
+    label: string;
     onClose: () => void;
-}
-
-const ProjectSheet = ({ file, onClose }: ProjectSheetProps) => {
-    const data = file.data;
-    const link = toLinkHref(data.link);
-    const previewSrc = data.previewImage ? getAssetPath(data.previewImage.src) : null;
-
+    children: React.ReactNode;
+    bodyClassName?: string;
+}) => {
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -47,13 +50,11 @@ const ProjectSheet = ({ file, onClose }: ProjectSheetProps) => {
             onClick={onClose}
         >
             <div
-                className="max-h-[88vh] w-full overflow-y-auto rounded-t-xl border-2 border-[#1a1a1a] bg-[#efece0] p-4 pb-8 text-[#1a1a1a] shadow-[0_-12px_32px_-12px_rgba(0,0,0,0.7)]"
+                className={`max-h-[88vh] w-full overflow-y-auto rounded-t-xl border-2 border-[#1a1a1a] bg-[#efece0] p-4 pb-8 text-[#1a1a1a] shadow-[0_-12px_32px_-12px_rgba(0,0,0,0.7)] ${bodyClassName ?? ""}`}
                 onClick={(event) => event.stopPropagation()}
             >
                 <div className="mb-3 flex items-center justify-between">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5a5a5a]">
-                        {file.label}
-                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5a5a5a]">{label}</span>
                     <button
                         type="button"
                         onClick={onClose}
@@ -62,6 +63,31 @@ const ProjectSheet = ({ file, onClose }: ProjectSheetProps) => {
                         close ×
                     </button>
                 </div>
+                {children}
+            </div>
+        </div>
+    );
+};
+
+const ProjectSheet = ({ file, onClose }: ProjectSheetProps) => {
+    if (file.fileType === "design") {
+        const DesignComponent = file.component;
+        return (
+            <SheetShell label={file.label} onClose={onClose}>
+                <div className="h-[62vh] overflow-hidden border-2 border-[#1a1a1a] bg-[#efece0]">
+                    <DesignComponent roleCard={file.roleCard} designLanguageCard={file.designLanguageCard} />
+                </div>
+            </SheetShell>
+        );
+    }
+
+    const data = file.data;
+    const link = toLinkHref(data.link);
+    const previewSrc = data.previewImage ? getAssetPath(data.previewImage.src) : null;
+
+    return (
+        <SheetShell label={file.label} onClose={onClose}>
+            <>
                 {previewSrc ? (
                     <div className="mb-4 overflow-hidden border-2 border-[#1a1a1a] bg-[#fff]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,8 +129,8 @@ const ProjectSheet = ({ file, onClose }: ProjectSheetProps) => {
                 ) : data.link ? (
                     <p className="font-mono text-[11px] text-[#555148]">{data.link}</p>
                 ) : null}
-            </div>
-        </div>
+            </>
+        </SheetShell>
     );
 };
 
@@ -253,7 +279,7 @@ const AbirOSMobile = () => {
                                                         </span>
                                                     </span>
                                                     <span className="font-mono text-[10px] text-[#5a5a5a]">
-                                                        {child.data.year}
+                                                        {child.fileType !== "design" ? child.data.year : null}
                                                     </span>
                                                 </button>
                                             </li>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Archivo_Black, Geist, Geist_Mono, Inter, JetBrains_Mono, Space_Mono } from "next/font/google";
+import { Archivo_Black, Fraunces, Geist, Geist_Mono, Inter, JetBrains_Mono, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,11 +37,28 @@ const jetBrainsMono = JetBrains_Mono({
   weight: ["400", "500", "700"],
 });
 
+// Sol.des case-study fonts: Fraunces (wonky italics) + self-hosted Clash Display.
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz", "SOFT", "WONK"],
+});
+
+const clashDisplay = localFont({
+  variable: "--font-clash",
+  src: "./fonts/ClashDisplay-Variable.woff2",
+  weight: "200 700",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Personal Website",
   description: "Personal website showcasing my projects and skills.",
   icons: {
-    icon: '/favicon.jpg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
   },
   openGraph: {
     title: "Abir Modak",
@@ -65,7 +83,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${archivoBlack.variable} ${spaceMono.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${archivoBlack.variable} ${spaceMono.variable} ${jetBrainsMono.variable} ${fraunces.variable} ${clashDisplay.variable} antialiased`}
       >
         {children}
       </body>

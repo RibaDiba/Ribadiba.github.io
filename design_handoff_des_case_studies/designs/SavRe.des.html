@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SaveRe.des — window explorations</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sr-deep:#354A33;      /* real app primary text / button color */
+    --sr-mid:#6FA36A;       /* supporting mid green */
+    --sr-light:#CBDFC9;     /* real app gradient top */
+    --sr-grad:#95C590;      /* real app gradient bottom */
+    --sr-pale:#E6F2E4;      /* real app active-nav tint */
+    --sr-warn:#D9A441;
+    --sr-bad:#C1554A;
+    --cream:#FAF6ED;
+    --ink:#2A211E;
+    --slate:#4A5565;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  body{ font-family:var(--sans); margin:0; }
+
+  /* ---- canvas scaffolding ---- */
+  .stage-label{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8a8378; margin: 0 0 10px 2px;
+  }
+  .stage-label b{ color:#2A211E }
+  .stage{
+    position:relative;
+    width: 800px;
+    background:
+      radial-gradient(700px 360px at 20% -10%, #1b1b1f 0%, transparent 60%),
+      #101011;
+    border-radius: 16px;
+    padding: 40px;
+    display:flex; align-items:flex-start; justify-content:center;
+  }
+
+  /* ---- retro OS window chrome — matches every other abir_os window ---- */
+  .win{
+    width: 720px;
+    background: #c8c4b8;
+    border: 2px solid #1a1a1a;
+    box-shadow: inset 2px 2px 0 #ebe7db, inset -2px -2px 0 #7a7668, 6px 6px 0 rgba(0,0,0,.45);
+    display: flex; flex-direction: column;
+    font-family: 'Trebuchet MS', Verdana, sans-serif;
+  }
+  .win-title{
+    height: 26px;
+    background: linear-gradient(180deg, #ff8c3a 0%, #c4590e 100%);
+    color: #fff;
+    display:flex; align-items:center; padding: 0 4px 0 8px; gap: 6px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase;
+    cursor: move; user-select: none; border-bottom: 2px solid #1a1a1a;
+  }
+  .win-title .t{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .win-title .btns{ display:flex; gap:3px }
+  .win-title .wbtn{
+    width: 18px; height: 16px; background:#c8c4b8; border:1.5px solid #1a1a1a;
+    box-shadow: inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668;
+    display:grid; place-items:center; font-family:var(--mono); font-size:10px; color:#1a1a1a;
+    cursor:pointer; padding:0; line-height:1;
+  }
+  .win-menu{
+    height:20px; background:#c8c4b8; display:flex; align-items:center; gap:12px; padding:0 8px;
+    font-family: var(--mono); font-size:11px; color:#1a1a1a; border-bottom:1px solid #7a7668;
+  }
+  .win-menu span u{ text-decoration:underline }
+  .win-body{
+    flex:1; background:#efece0; border:2px inset #9a9688; margin:4px; padding:10px; overflow:auto; position:relative;
+  }
+  .win.win-des .win-body{
+    background:
+      radial-gradient(440px 400px at 2% -10%, rgba(53,74,51,.6) 0%, rgba(53,74,51,.6) 22%, transparent 56%),
+      radial-gradient(380px 340px at 100% 106%, rgba(203,223,201,.9) 0%, rgba(203,223,201,.9) 20%, transparent 54%),
+      radial-gradient(280px 260px at 85% 6%, rgba(111,163,106,.4) 0%, transparent 58%),
+      radial-gradient(320px 280px at -8% 96%, rgba(230,242,228,.85) 0%, transparent 54%),
+      radial-gradient(260px 240px at 55% 45%, rgba(53,74,51,.14) 0%, transparent 60%),
+      var(--cream);
+    padding:0;
+  }
+  .win-status{
+    height:18px; background:#c8c4b8; border-top:1px solid #7a7668;
+    display:flex; align-items:center; padding:0 8px;
+    font-family:var(--mono); font-size:10px; color:#3a3a3a; justify-content:space-between;
+  }
+
+  /* ---- shared content atoms (same vocabulary as leastudo/sol/recall .des files) ---- */
+  .ls-stage{ position:relative; width:100%; overflow:hidden; }
+  @keyframes lsEnter{
+    from{ opacity:0; translate:0 46px; scale:.92; }
+    to{ opacity:1; translate:0 0; scale:1; }
+  }
+  .ls-enter{ animation: lsEnter .62s cubic-bezier(.34,1.56,.64,1) both; }
+
+  /* ---- bubbly float: gentle continuous bob, kicks in after the entrance settles ---- */
+  @keyframes srFloat{
+    0%{ translate:0 0; }
+    50%{ translate:0 var(--amp,-9px); }
+    100%{ translate:0 0; }
+  }
+  .sr-float{ transform-origin:center; }
+  @media (prefers-reduced-motion: no-preference){
+    .sr-float{ animation: srFloat var(--dur,8s) ease-in-out infinite; animation-delay:var(--delay,0s); }
+  }
+  .ls-headline{ font-family:var(--sans); font-weight:800; letter-spacing:-.02em; margin:0; }
+  .ls-headline.red{ color:var(--sr-deep); font-size:27px; line-height:1.05; }
+  .ls-headline.ink{ color:var(--ink); font-size:23px; line-height:1.05; margin-top:1px; }
+  .ls-sub{ font-family:var(--sans); font-size:12px; line-height:1.4; margin:9px 0 0; color:var(--ink); }
+  .ls-sub b{ color:var(--sr-deep); font-weight:700; }
+
+  .ls-palette{
+    display:flex; gap:6px; background: rgba(255,255,255,.68);
+    padding:7px 9px; border-radius:10px; box-shadow:0 10px 20px -10px rgba(0,0,0,.28);
+  }
+  .ls-palette .sw{ width:18px; height:18px; border-radius:5px; box-shadow:0 3px 6px -2px rgba(0,0,0,.35); }
+
+  .ls-card{
+    font-family:'Trebuchet MS', Verdana, sans-serif;
+    font-size:11px; line-height:1.5; color:#1a1a1a;
+    background:#efece0; border:2px solid #1a1a1a;
+    padding:10px 12px; box-shadow:4px 4px 0 rgba(0,0,0,.35);
+    transition: translate .35s cubic-bezier(.34,1.6,.64,1);
+  }
+  .ls-card:hover{ translate:0 -3px; }
+  .ls-card .meta{ display:grid; grid-template-columns:auto 1fr; gap:2px 8px; margin-bottom:8px; }
+  .ls-card .k{ font-size:9px; text-transform:uppercase; letter-spacing:.06em; color:#5a5a5a; }
+  .ls-card .tags{ display:flex; flex-wrap:wrap; gap:4px; margin:8px 0; }
+  .ls-card .tag{
+    font-family:var(--mono); font-size:9px; text-transform:uppercase;
+    background:#fff; border:1px solid #1a1a1a; padding:2px 6px; box-shadow:2px 2px 0 rgba(0,0,0,.2);
+    transition: scale .3s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ls-card .tag:hover{ scale:1.14; }
+  .ls-card .link{
+    font-family:var(--mono); font-size:10px; color:#0055aa; text-decoration:underline;
+    cursor:pointer; display:inline-block; margin-top:2px;
+    transition: scale .3s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ls-card .link:hover{ scale:1.12; }
+
+  .ls-wordmark{ font-family:var(--sans); font-weight:900; font-size:44px; letter-spacing:-.02em; color:var(--sr-deep); margin:0; text-align:center; }
+  .ls-tagline{ font-family:var(--sans); font-weight:600; font-size:14px; color:var(--sr-deep); text-align:center; margin:4px 0 0; opacity:.85; }
+
+  /* ---- glow behind hero phone ---- */
+  .sr-halo{
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle, rgba(203,223,201,.9) 0%, rgba(203,223,201,0) 70%);
+  }
+
+  /* ---- real SaveRe pill buttons (rounded-full, exact brand color #354A33) ---- */
+  .sr-btn{
+    display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border-radius:999px;
+    font-family:var(--sans); font-weight:700; font-size:13px; cursor:pointer; border:none; white-space:nowrap;
+    transition: scale .4s cubic-bezier(.34,1.8,.64,1), translate .4s cubic-bezier(.34,1.8,.64,1), box-shadow .3s ease;
+  }
+  .sr-btn:hover{ scale:1.06; translate:0 -3px; }
+  .sr-btn:active{ scale:.95; }
+  .sr-btn.primary{ background:var(--sr-deep); color:#fff; box-shadow:0 12px 22px -10px rgba(53,74,51,.55); }
+  .sr-btn.secondary{ background:#fff; color:var(--sr-deep); border:2px solid var(--sr-deep); box-shadow:0 10px 18px -10px rgba(0,0,0,.18); }
+
+  /* ---- annotation chip (styled like the retro proj-detail info blocks) ---- */
+  .sr-chip{
+    background:#efece0; border:2px solid var(--ink); border-radius:8px;
+    box-shadow:3px 3px 0 rgba(0,0,0,.3); padding:7px 9px;
+    font-family:'Trebuchet MS', Verdana, sans-serif; font-size:10px; color:#1a1a1a;
+    display:flex; align-items:center; gap:7px;
+    transition: scale .35s cubic-bezier(.34,1.6,.64,1);
+  }
+  .sr-chip:hover{ scale:1.06; }
+  .sr-chip .dots{ display:flex; gap:3px; flex-shrink:0; }
+  .sr-chip .dots .d{ width:10px; height:10px; border-radius:50%; }
+
+  /* =================================================================
+     Rebuilt phone screens — pure HTML/CSS, no raster.
+     Sized in em so one markup works "mini" or "hero" via font-size.
+     ================================================================= */
+  .sr-phone{
+    width:180px; aspect-ratio:9/19; background:#fff; border:2.5px solid var(--ink);
+    border-radius:2.1em; padding:1.05em 0.85em 1.25em; box-shadow:0 16px 30px -14px rgba(0,0,0,.4);
+    display:flex; flex-direction:column; font-family:var(--sans); color:var(--sr-deep);
+    overflow:hidden; position:relative; font-size:10px;
+    transition: scale .4s cubic-bezier(.34,1.6,.64,1), translate .4s cubic-bezier(.34,1.6,.64,1);
+  }
+  .sr-phone:hover{ scale:1.05; translate:0 -6px; }
+  .sr-phone.hero{ width:290px; font-size:15.5px; }
+  .sr-phone.tint{ background:linear-gradient(180deg, var(--sr-light) 0%, #fff 60%); }
+
+  .sr-h-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6em; }
+  .sr-h-row .brand{ font-weight:800; font-size:1.55em; letter-spacing:-.02em; }
+  .sr-avatar{ width:1.8em; height:1.8em; border-radius:50%; background:var(--sr-light); border:1.3px solid var(--sr-deep); flex-shrink:0; }
+  .sr-greet{ font-size:0.95em; font-weight:700; margin-bottom:0.75em; }
+
+  .sr-section-label{ display:flex; align-items:baseline; justify-content:space-between; font-size:0.72em; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--sr-deep); margin:0.6em 0 0.4em; }
+  .sr-section-label .more{ font-weight:600; text-transform:none; color:#9a9484; font-size:0.95em; letter-spacing:0; }
+
+  .sr-row{ display:flex; align-items:center; gap:0.55em; background:#fff; border:1px solid #E7E2D4; border-radius:0.8em; padding:0.45em 0.6em; margin-bottom:0.35em; box-shadow:0 2px 6px -3px rgba(0,0,0,.14); }
+  .sr-dot{ width:0.6em; height:0.6em; border-radius:50%; flex-shrink:0; }
+  .sr-dot.ok{ background:var(--sr-mid); } .sr-dot.warn{ background:var(--sr-warn); } .sr-dot.bad{ background:var(--sr-bad); }
+  .sr-row .nm{ font-weight:700; font-size:0.85em; }
+  .sr-row .sub{ font-size:0.68em; color:#9a9484; margin-top:0.12em; }
+  .sr-row .chev{ margin-left:auto; font-weight:700; opacity:.55; font-size:1em; }
+
+  .sr-thumb{ width:1.9em; height:1.9em; border-radius:0.5em; flex-shrink:0; background: repeating-linear-gradient(115deg, #ECE7D8 0 4px, #E1DBC8 4px 8px); position:relative; }
+
+  .sr-foot-nav{ margin-top:auto; display:flex; align-items:center; justify-content:space-around; background:#fff; border-radius:2em; padding:0.5em 0.25em; box-shadow:0 4px 10px -4px rgba(0,0,0,.22); position:relative; }
+  .sr-foot-nav.fab-only{ justify-content:center; padding:0.65em 0.25em; }
+  .sr-foot-nav .it{ display:flex; flex-direction:column; align-items:center; gap:0.15em; font-size:0.52em; font-weight:700; color:var(--sr-deep); padding:0.35em 0.55em; border-radius:1em; }
+  .sr-foot-nav .it.active{ background:var(--sr-pale); }
+  .sr-foot-nav .ic{ width:1em; height:1em; border:1.4px solid currentColor; border-radius:0.3em; }
+  .sr-foot-nav .ic.round{ border-radius:50%; }
+  .sr-fab{ position:absolute; left:50%; transform:translateX(-50%); bottom:1.55em; width:2.6em; height:2.6em; border-radius:50%; background:#fff; box-shadow:0 6px 14px -6px rgba(0,0,0,.35); display:grid; place-items:center; }
+  .sr-fab .cam{ width:1.3em; height:0.95em; border:1.6px solid var(--sr-deep); border-radius:0.3em; position:relative; }
+  .sr-fab .cam::after{ content:""; position:absolute; inset:0.16em 0.4em; border:1.4px solid var(--sr-deep); border-radius:50%; }
+
+  .sr-search{ display:flex; align-items:center; gap:0.4em; background:#F3F1E8; border-radius:1em; padding:0.42em 0.6em; font-size:0.72em; color:#9a9484; margin-bottom:0.65em; }
+  .sr-search .mag{ width:0.9em; height:0.9em; border:1.4px solid #9a9484; border-radius:50%; position:relative; flex-shrink:0; }
+  .sr-search .mag::after{ content:""; position:absolute; width:0.5em; height:1.3px; background:#9a9484; bottom:-0.22em; right:-0.22em; transform:rotate(45deg); }
+
+  .sr-cal-head{ display:flex; align-items:center; justify-content:space-between; font-weight:800; font-size:0.92em; margin-bottom:0.45em; }
+  .sr-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:0.15em; text-align:center; font-size:0.58em; margin-bottom:0.5em; }
+  .sr-cal-grid .wd{ color:#9a9484; font-weight:700; padding-bottom:0.25em; }
+  .sr-cal-grid .dy{ padding:0.3em 0; border-radius:0.5em; }
+  .sr-cal-grid .dy.today{ background:var(--sr-deep); color:#fff; font-weight:800; }
+  .sr-week-label{ font-size:0.66em; font-weight:700; color:var(--sr-deep); margin:0.3em 0 0.35em; }
+
+  .sr-top{ display:flex; align-items:center; gap:0.5em; margin-bottom:0.75em; }
+  .sr-top .back{ font-weight:700; font-size:1.1em; opacity:.7; }
+  .sr-top .title{ font-weight:800; font-size:1.2em; }
+  .sr-ing-row{ display:flex; align-items:center; gap:0.6em; background:#fff; border:1px solid #E7E2D4; border-radius:0.8em; padding:0.5em 0.6em; margin-bottom:0.4em; box-shadow:0 2px 6px -3px rgba(0,0,0,.12); }
+  .sr-ing-row .cat{ font-size:0.65em; color:#9a9484; }
+  .sr-warn-tri{ margin-left:auto; width:0; height:0; border-left:0.5em solid transparent; border-right:0.5em solid transparent; border-bottom:0.85em solid var(--sr-warn); flex-shrink:0; position:relative; }
+
+  /* ---- actual app screenshots (real wireframe renders, not rebuilt CSS) ---- */
+  .sr-shot{
+    display:block; border-radius: 18px; box-shadow:0 16px 30px -14px rgba(0,0,0,.4);
+    transition: scale .4s cubic-bezier(.34,1.6,.64,1), translate .4s cubic-bezier(.34,1.6,.64,1);
+  }
+  .sr-shot:hover{ scale:1.05; translate:0 -6px; }
+
+  /* ---- simple CSS receipt/doc glyph (no emoji, no SVG) ---- */
+  .sr-doc{ width:14px; height:17px; border:1.5px solid var(--ink); border-radius:2px; position:relative; flex-shrink:0; }
+  .sr-doc::before{ content:""; position:absolute; left:2.5px; right:2.5px; top:4px; height:1.5px; background:var(--ink); box-shadow:0 4px 0 var(--ink), 0 8px 0 var(--ink); }
+
+</style>
+</head>
+<body>
+
+<!-- ============ 1 — Pantry Ledger (halo hero phone, copy + CTAs + info card) ============ -->
+<div style="position:absolute; left:0; top:0;" data-screen-label="SaveRe.des — variant 1: Pantry Ledger">
+  <div class="stage-label">1 — <b>pantry ledger</b> · halo-lit Home screen paired with the pitch, real pill buttons</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">SaveRe.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:700px;">
+
+          <div class="sr-halo" style="width:480px; height:480px; right:-120px; top:90px; z-index:1;"></div>
+
+          <div style="position:absolute; top:26px; left:26px; width:246px; z-index:6;">
+            <h1 class="ls-headline red">Groceries, Tracked</h1>
+            <h1 class="ls-headline ink">Before They Go To Waste</h1>
+            <p class="ls-sub"><b>Snap a receipt</b> — SaveRe logs every item and flags what's about to expire.</p>
+          </div>
+
+          <div style="position:absolute; top:196px; left:26px; z-index:6; display:flex; flex-direction:column; gap:9px; align-items:flex-start;">
+            <button class="sr-btn primary" style="transform:rotate(-1.5deg);">Scan a Receipt</button>
+            <button class="sr-btn secondary" style="transform:rotate(1.5deg);">View Recipes</button>
+          </div>
+
+          <div class="ls-palette" style="position:absolute; top:286px; left:42px; z-index:5; transform:rotate(-2deg);">
+            <div class="sw" style="background:#354A33"></div>
+            <div class="sw" style="background:#95C590"></div>
+            <div class="sw" style="background:#CBDFC9"></div>
+            <div class="sw" style="background:#2A211E"></div>
+            <div class="sw" style="background:#FAF6ED; border:1px solid rgba(0,0,0,.15)"></div>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:346px; left:26px; width:230px; z-index:6; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Full-Stack Developer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>Next.js · FastAPI · Gemini AI</div>
+            </div>
+            <div class="tags"><span class="tag">food-waste</span><span class="tag">ocr</span><span class="tag">ai</span></div>
+            <span class="link">github.com/RibaDiba/SaveRe →</span>
+          </div>
+
+          <div class="sr-phone" style="position:absolute; width:250px; right:38px; top:56px; transform:rotate(-3deg); z-index:3;">
+            <div class="sr-h-row"><span class="brand">SaveRe</span><span class="sr-avatar"></span></div>
+            <div class="sr-greet">Hello, Amie</div>
+            <div class="sr-section-label"><span>Expiring soon</span><span class="more">See all ›</span></div>
+            <div class="sr-row"><span class="sr-dot bad"></span><div style="flex:1;"><div class="nm">Spinach</div><div class="sub">Expires today</div></div><span class="chev">›</span></div>
+            <div class="sr-row"><span class="sr-dot warn"></span><div style="flex:1;"><div class="nm">Greek Yogurt</div><div class="sub">Expires in 2 days</div></div><span class="chev">›</span></div>
+            <div class="sr-row"><span class="sr-dot ok"></span><div style="flex:1;"><div class="nm">Eggs</div><div class="sub">Expires in 9 days</div></div><span class="chev">›</span></div>
+            <div class="sr-section-label"><span>Recipes for you</span><span class="more">See all ›</span></div>
+            <div class="sr-row"><span class="sr-thumb"></span><div style="flex:1;"><div class="nm">Spinach Frittata</div><div class="sub">18 min</div></div></div>
+            <div class="sr-foot-nav">
+              <div class="it active"><span class="ic round"></span>Home</div>
+              <div class="it"><span class="ic"></span>Cal</div>
+              <div class="it"><span class="ic"></span>Recipes</div>
+              <div class="it"><span class="ic round"></span>You</div>
+            </div>
+            <div class="sr-fab"><span class="cam"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>SaveRe.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2 — Full Ledger (flat full-width Home screen, no phone bezel) ============ -->
+<div style="position:absolute; left:880px; top:0;" data-screen-label="SaveRe.des — variant 2: Full Ledger">
+  <div class="stage-label">2 — <b>full ledger</b> · wordmark + real tagline over one flat, full-bleed Home screen render</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">SaveRe.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:640px;">
+
+          <div style="position:absolute; top:24px; left:50%; transform:translateX(-50%); z-index:6; text-align:center;">
+            <h1 class="ls-wordmark">SaveRe</h1>
+            <p class="ls-tagline">SaveRe it. Don't waste it.</p>
+          </div>
+
+          <div style="position:absolute; top:112px; left:50%; transform:translateX(-50%); z-index:6; display:flex; gap:10px;">
+            <button class="sr-btn primary" style="transform:rotate(-1deg);">Scan a Receipt</button>
+            <button class="sr-btn secondary" style="transform:rotate(1deg);">Generate a Recipe</button>
+          </div>
+
+          <div style="position:absolute; top:186px; left:44px; right:44px; z-index:4; background:linear-gradient(180deg, var(--sr-light) 0%, #fff 45%); border:2.5px solid var(--ink); border-radius:22px; padding:20px 24px 22px; box-shadow:0 20px 36px -16px rgba(0,0,0,.35);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-weight:800; font-size:20px; color:var(--sr-deep);">SaveRe</span>
+              <span class="sr-avatar" style="width:30px; height:30px;"></span>
+            </div>
+            <div style="font-weight:700; font-size:14px; color:var(--sr-deep); margin-bottom:12px;">Hello, Amie</div>
+            <div style="display:flex; align-items:baseline; justify-content:space-between; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--sr-deep); margin-bottom:8px;">
+              <span>Ingredients expiring soon</span><span style="font-weight:600; text-transform:none; color:#9a9484; letter-spacing:0;">See all ›</span>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <div style="flex:1; background:#fff; border:1px solid #E7E2D4; border-radius:12px; padding:9px 11px; box-shadow:0 2px 8px -4px rgba(0,0,0,.14); display:flex; align-items:center; gap:8px;"><span class="sr-dot bad" style="width:9px;height:9px;"></span><div><div style="font-weight:700; font-size:12px;">Spinach</div><div style="font-size:10px; color:#9a9484;">Expires today</div></div></div>
+              <div style="flex:1; background:#fff; border:1px solid #E7E2D4; border-radius:12px; padding:9px 11px; box-shadow:0 2px 8px -4px rgba(0,0,0,.14); display:flex; align-items:center; gap:8px;"><span class="sr-dot warn" style="width:9px;height:9px;"></span><div><div style="font-weight:700; font-size:12px;">Yogurt</div><div style="font-size:10px; color:#9a9484;">In 2 days</div></div></div>
+              <div style="flex:1; background:#fff; border:1px solid #E7E2D4; border-radius:12px; padding:9px 11px; box-shadow:0 2px 8px -4px rgba(0,0,0,.14); display:flex; align-items:center; gap:8px;"><span class="sr-dot ok" style="width:9px;height:9px;"></span><div><div style="font-weight:700; font-size:12px;">Eggs</div><div style="font-size:10px; color:#9a9484;">In 9 days</div></div></div>
+            </div>
+            <div style="display:flex; align-items:baseline; justify-content:space-between; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--sr-deep); margin-bottom:8px;">
+              <span>Recipes, just for you</span><span style="font-weight:600; text-transform:none; color:#9a9484; letter-spacing:0;">See all ›</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <div style="flex:1; background:#fff; border:1px solid #E7E2D4; border-radius:12px; padding:9px 11px; box-shadow:0 2px 8px -4px rgba(0,0,0,.14); display:flex; align-items:center; gap:9px;"><span class="sr-thumb" style="width:26px; height:26px;"></span><div><div style="font-weight:700; font-size:12px;">Spinach Frittata</div><div style="font-size:10px; color:#9a9484;">18 min</div></div></div>
+              <div style="flex:1; background:#fff; border:1px solid #E7E2D4; border-radius:12px; padding:9px 11px; box-shadow:0 2px 8px -4px rgba(0,0,0,.14); display:flex; align-items:center; gap:9px;"><span class="sr-thumb" style="width:26px; height:26px;"></span><div><div style="font-weight:700; font-size:12px;">Yogurt Parfait</div><div style="font-size:10px; color:#9a9484;">8 min</div></div></div>
+            </div>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:440px; left:44px; width:301px; z-index:6; transform:rotate(-1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Full-Stack Developer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>Next.js · FastAPI · Gemini AI</div>
+            </div>
+            <div class="tags"><span class="tag">food-waste</span><span class="tag">ocr</span><span class="tag">ai</span></div>
+            <span class="link">github.com/RibaDiba/SaveRe →</span>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:466px; left:363px; width:293px; z-index:5; transform:rotate(1deg); display:flex; align-items:center; gap:11px;">
+            <div style="display:flex; gap:4px; flex-shrink:0;">
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--sr-deep); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--sr-grad); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+              <div style="width:15px; height:15px; border-radius:4px; background:var(--cream); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+            </div>
+            <div>
+              <div class="k" style="margin-bottom:3px;">design language</div>
+              <div>Forest green on mint-into-cream, pill buttons, color-coded urgency — a pantry that reads calm, not alarming.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>SaveRe.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 — Field Notes (blown-up Add/Calendar screen + rebuilt annotation chips) ============ -->
+<div style="position:absolute; left:0; top:900px;" data-screen-label="SaveRe.des — variant 3: Field Notes">
+  <div class="stage-label">3 — <b>field notes</b> · the Add/Calendar screen blown up big, chips annotate the OCR + urgency system</div>
+  <div class="stage">
+    <div class="win win-des">
+      <div class="win-title">
+        <span class="t">SaveRe.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:760px;">
+
+          <div style="position:absolute; top:26px; left:26px; width:224px; z-index:7;">
+            <h1 class="ls-headline red">Never Miss</h1>
+            <h1 class="ls-headline ink">The Expiration Date</h1>
+            <p class="ls-sub"><b>A month at a glance</b> — every grocery plotted by expiry week, one tap from a fresh receipt scan.</p>
+          </div>
+
+          <div style="position:absolute; top:172px; left:26px; z-index:7; display:flex; flex-direction:column; gap:9px; align-items:flex-start;">
+            <button class="sr-btn primary" style="transform:rotate(-1.5deg);">Scan a Receipt</button>
+            <button class="sr-btn secondary" style="transform:rotate(1.5deg);">Add Manually</button>
+          </div>
+
+          <div class="ls-card" style="position:absolute; top:266px; left:26px; width:224px; z-index:6; transform:rotate(1deg);">
+            <div class="meta">
+              <div class="k">role</div><div>Full-Stack Developer</div>
+              <div class="k">year</div><div>2026—</div>
+              <div class="k">stack</div><div>Next.js · FastAPI · Gemini AI</div>
+            </div>
+            <div class="tags"><span class="tag">food-waste</span><span class="tag">ocr</span><span class="tag">ai</span></div>
+            <span class="link">github.com/RibaDiba/SaveRe →</span>
+          </div>
+
+          <div class="sr-chip" style="position:absolute; top:460px; left:34px; z-index:6; transform:rotate(-2deg);">
+            <span class="sr-doc"></span>
+            <div><div style="font-weight:700; font-size:10px;">Tesseract OCR + Gemini</div><div style="font-size:8.5px; color:#5a5248;">reads receipts into line items</div></div>
+          </div>
+
+          <div class="sr-chip" style="position:absolute; top:526px; left:64px; z-index:6; transform:rotate(2deg);">
+            <div class="dots"><span class="d" style="background:var(--sr-mid);"></span><span class="d" style="background:var(--sr-warn);"></span><span class="d" style="background:var(--sr-bad);"></span></div>
+            <div><div style="font-weight:700; font-size:10px;">Urgency, color-coded</div><div style="font-size:8.5px; color:#5a5248;">fresh → soon → gone</div></div>
+          </div>
+
+          <div class="sr-phone hero" style="position:absolute; width:320px; right:36px; top:24px; transform:rotate(3deg); z-index:5;">
+            <div class="sr-search"><span class="mag"></span>Search food items</div>
+            <div class="sr-cal-head"><span>‹</span><span>November · 2025</span><span>›</span></div>
+            <div class="sr-cal-grid">
+              <span class="wd">Su</span><span class="wd">Mo</span><span class="wd">Tu</span><span class="wd">We</span><span class="wd">Th</span><span class="wd">Fr</span><span class="wd">Sa</span>
+              <span class="dy"> </span><span class="dy"> </span><span class="dy">1</span><span class="dy">2</span><span class="dy">3</span><span class="dy">4</span><span class="dy">5</span>
+              <span class="dy">6</span><span class="dy">7</span><span class="dy">8</span><span class="dy">9</span><span class="dy">10</span><span class="dy today">11</span><span class="dy">12</span>
+              <span class="dy">13</span><span class="dy">14</span><span class="dy">15</span><span class="dy">16</span><span class="dy">17</span><span class="dy">18</span><span class="dy">19</span>
+            </div>
+            <div class="sr-week-label">Groceries expiring week of 11/10–11/16</div>
+            <div class="sr-row"><span class="sr-dot bad"></span><div style="flex:1;"><div class="nm">Spinach</div><div class="sub">Expiry: 11/11/2025</div></div></div>
+            <div class="sr-row"><span class="sr-dot warn"></span><div style="flex:1;"><div class="nm">Greek Yogurt</div><div class="sub">Expiry: 11/13/2025</div></div></div>
+            <div class="sr-foot-nav">
+              <div class="it"><span class="ic"></span>Calendar</div>
+              <div class="it active"><span class="ic round"></span>Add Receipt</div>
+            </div>
+            <div class="sr-fab"><span class="cam"></span></div>
+          </div>
+
+          <div class="ls-palette" style="position:absolute; bottom:24px; left:44px; z-index:6; transform:rotate(-2deg);">
+            <div class="sw" style="background:#354A33"></div>
+            <div class="sw" style="background:#95C590"></div>
+            <div class="sw" style="background:#CBDFC9"></div>
+            <div class="sw" style="background:#2A211E"></div>
+            <div class="sw" style="background:#FAF6ED; border:1px solid rgba(0,0,0,.15)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>SaveRe.des</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 — Signal Stack (three rebuilt screens cascading, staggered entrance) ============ -->
+<div style="position:absolute; left:880px; top:900px;" data-screen-label="SaveRe.des — variant 4: Signal Stack">
+  <div class="stage-label">4 — <b>signal stack</b> · real app screenshot cascade (Profile, Calendar, Home)</div>
+  <div class="stage">
+    <div class="win win-des" style="width: 651px; height: 695px">
+      <div class="win-title">
+        <span class="t">SaveRe.des — case study</span>
+        <div class="btns"><button class="wbtn min">_</button><button class="wbtn close">✕</button></div>
+      </div>
+      <div class="win-menu"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+      <div class="win-body">
+        <div class="ls-stage" style="height:900px;">
+
+          <!-- copy column — standard pattern (headline, role card, standard design-language card) -->
+          <div class="ls-enter" style="position:absolute; top:26px; left:26px; width:236px; z-index:8; animation-delay:0s;">
+            <div class="sr-float" style="--amp:-7px; --dur:8.4s; --delay:.2s;">
+              <h1 class="ls-headline red" style="font-size:25px;">Three Screens,</h1>
+              <h1 class="ls-headline ink" style="font-size:20px;">One Pantry System</h1>
+              <p class="ls-sub"><b style="color:#2E402C;">Submission for Princeton Hacks F25!</b><br><br></p>
+            </div>
+          </div>
+
+          <div class="ls-enter" style="position: absolute; top: 160px; left: 20px; width: 236px; z-index: 7; transform: rotate(-1deg); animation-delay: .1s">
+            <div class="sr-float" style="--amp:-9px; --dur:9.2s; --delay:.4s;">
+              <div class="ls-card">
+                <div class="meta">
+                  <div class="k">role</div><div>Full-Stack Developer</div>
+                  <div class="k">year</div><div>2026—</div>
+                  <div class="k">stack</div><div>Next.js · FastAPI · Gemini AI</div>
+                </div>
+                <div class="tags"><span class="tag">food-waste</span><span class="tag">ocr</span><span class="tag">ai</span></div>
+                <span class="link">github.com/RibaDiba/SaveRe →</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ls-enter" style="position: absolute; top: 347px; left: 25px; width: 236px; z-index: 7; transform: rotate(1deg); animation-delay: .18s">
+            <div class="sr-float" style="--amp:-8px; --dur:10s; --delay:.6s;">
+              <div class="ls-card" style="display:flex; align-items:center; gap:11px;">
+                <div style="display:flex; gap:4px; flex-shrink:0;">
+                  <div style="width:15px; height:15px; border-radius:4px; background:var(--sr-deep); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+                  <div style="width:15px; height:15px; border-radius:4px; background:var(--sr-grad); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+                  <div style="width:15px; height:15px; border-radius:4px; background:var(--cream); box-shadow:1px 1px 0 rgba(0,0,0,.25);"></div>
+                </div>
+                <div>
+                  <div class="k" style="margin-bottom:3px;">design language</div>
+                  <div>Forest green on mint-into-cream, pill buttons, color-coded urgency — a pantry that reads calm, not alarming.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- real app screenshots, exactly as captured — Profile / Calendar / Home cascading -->
+          <div class="ls-enter" style="position:absolute; left:230px; top:8px; z-index:4; animation-delay:.3s;">
+            <div class="sr-float" style="--amp:-13px; --dur:9.6s; --delay:.5s;">
+              <img class="sr-shot" src="assets/savre-signal-stack-real.png" style="width:440px; box-shadow:none;" alt="SaveRe app screens: Profile, Calendar, and Home cascading">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-status"><span>ready</span><span>SaveRe.des</span></div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

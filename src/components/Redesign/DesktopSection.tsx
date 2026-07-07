@@ -3,12 +3,29 @@
 import { type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     retroDesktopPortfolioNodes,
+    type DesignCardProps,
     type PortfolioDesktopNode,
     type PortfolioFileNode,
     type PortfolioFileType,
     type PortfolioFolderNode,
-    type PortfolioMediaAsset
+    type PortfolioMediaAsset,
+    type PortfolioStandardFileNode
 } from "@/stores/RetroDesktopPortfolio";
+import type {
+    DragState,
+    FileWindow,
+    FolderWindow,
+    ImageWindow,
+    NotepadLauncherWindow,
+    OpenWindow,
+    ResizeDirection,
+    ResizeState,
+    RetroIconVariant,
+    RetroNodeIconProps,
+    TerminalLauncherWindow,
+    WindowPosition,
+    WindowSize,
+} from "@/interfaces/desktop";
 import { getAssetPath } from "@/utils/paths";
 import ReadmeNotepad from "./ReadmeNotepad";
 import StartMenu from "./StartMenu";
@@ -18,80 +35,14 @@ import styles from "./DesktopSection.module.css";
 const TERMINAL_WINDOW_ID = "terminal";
 const NOTEPAD_WINDOW_ID = "notepad";
 
-interface WindowPosition {
-    x: number;
-    y: number;
-}
-
-interface WindowSize {
-    width: number;
-    height: number;
-}
-
-interface BaseWindow {
-    id: string;
-    label: string;
-    position: WindowPosition;
-    size: WindowSize;
-    zIndex: number;
-    minimized: boolean;
-}
-
-interface FolderWindow extends BaseWindow {
-    kind: "folder";
-    folder: PortfolioFolderNode;
-}
-
-interface FileWindow extends BaseWindow {
-    kind: "file";
-    file: PortfolioFileNode;
-}
-
-interface ImageWindow extends BaseWindow {
-    kind: "image";
-    src: string;
-    alt: string;
-    title: string;
-}
-
-interface TerminalLauncherWindow extends BaseWindow {
-    kind: "terminal";
-}
-
-interface NotepadLauncherWindow extends BaseWindow {
-    kind: "notepad";
-}
-
-type OpenWindow = FolderWindow | FileWindow | ImageWindow | TerminalLauncherWindow | NotepadLauncherWindow;
-
-interface DragState {
-    id: string;
-    offsetX: number;
-    offsetY: number;
-    windowWidth: number;
-    windowHeight: number;
-}
-
-type ResizeDirection = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
-
-interface ResizeState {
-    id: string;
-    direction: ResizeDirection;
-    startX: number;
-    startY: number;
-    startPosition: WindowPosition;
-    startSize: WindowSize;
-}
-
 const cn = (...classes: Array<string | false | null | undefined>) => classes.filter(Boolean).join(" ");
-
-type RetroIconVariant = "folder" | PortfolioFileType;
 
 const retroFileVariantClasses: Record<PortfolioFileType, string> = {
     img: styles.iconFileImg,
     code: styles.iconFileCode,
     paper: styles.iconFilePaper,
-    game: styles.iconFileCode
+    game: styles.iconFileCode,
+    design: styles.iconFileDesign
 };
 
 const getNodeIconVariant = (node: PortfolioDesktopNode | PortfolioFileNode): RetroIconVariant => {
@@ -359,20 +310,18 @@ const getWindowStatus = (windowItem: OpenWindow): [string, string] => {
     return ["ready", windowItem.label];
 };
 
-interface RetroNodeIconProps {
-    node: PortfolioDesktopNode | PortfolioFileNode;
-    size: "desktop" | "folder";
-}
-
 const RetroNodeIcon = ({ node, size }: RetroNodeIconProps) => {
     const variant = getNodeIconVariant(node);
     const iconTypeClass = variant === "folder" ? styles.iconFolder : cn(styles.iconFile, retroFileVariantClasses[variant]);
+    const designIconSrc = node.kind === "file" && node.fileType === "design" ? node.iconSrc : undefined;
 
     return (
         <span
             aria-hidden="true"
             className={cn(styles.iconArt, size === "desktop" ? styles.desktopIconArt : styles.folderIconArt, iconTypeClass)}
-        />
+        >
+            {designIconSrc ? <img src={getAssetPath(designIconSrc)} alt="" className={styles.iconFileDesignImg} /> : null}
+        </span>
     );
 };
 
@@ -608,6 +557,10 @@ const DesktopSection = () => {
                 );
             }
 
+            const windowSize = file.fileType === "design" && file.defaultSize
+                ? { ...file.defaultSize }
+                : { ...fileWindowSize };
+
             return [
                 ...currentWindows,
                 {
@@ -616,7 +569,7 @@ const DesktopSection = () => {
                     kind: "file",
                     file,
                     position: createWindowPosition(currentWindows.length),
-                    size: { ...fileWindowSize },
+                    size: windowSize,
                     zIndex,
                     minimized: false
                 }
@@ -935,8 +888,9 @@ const DesktopSection = () => {
 
                         {visibleWindows.map((windowItem) => {
                             const isFocused = activeFocusedWindowId === windowItem.id;
-                            const linkHref = windowItem.kind === "file" ? toLinkHref(windowItem.file.data.link) : null;
-                            const previewImage = windowItem.kind === "file" ? windowItem.file.data.previewImage : undefined;
+                            const stdFile: PortfolioStandardFileNode | null = windowItem.kind === "file" && windowItem.file.fileType !== "design" ? windowItem.file as PortfolioStandardFileNode : null;
+                            const linkHref = stdFile ? toLinkHref(stdFile.data.link) : null;
+                            const previewImage = stdFile?.data.previewImage;
                             const previewImageSrc = previewImage ? toMediaSrc(previewImage.src) : null;
                             const [statusLeft, statusRight] = getWindowStatus(windowItem);
                             const titleLabel = getWindowTitle(windowItem);
@@ -999,7 +953,8 @@ const DesktopSection = () => {
                                             styles.windowBody,
                                             windowItem.kind === "image" && styles.windowBodyImage,
                                             windowItem.kind === "terminal" && styles.windowTermBody,
-                                            windowItem.kind === "notepad" && styles.windowNoteBody
+                                            windowItem.kind === "notepad" && styles.windowNoteBody,
+                                            windowItem.kind === "file" && windowItem.file.fileType === "design" && styles.windowBodyDesign
                                         )}
                                     >
                                         {windowItem.kind === "folder" ? (
@@ -1053,14 +1008,18 @@ const DesktopSection = () => {
 
                                         {windowItem.kind === "file" ? (
                                             <article className={styles.fileDetail}>
-                                                {windowItem.file.fileType === "game" ? (
+                                                {windowItem.file.fileType === "design" ? (
+                                                    <div className={styles.fileDetailDesign}>
+                                                        <windowItem.file.component roleCard={windowItem.file.roleCard} designLanguageCard={windowItem.file.designLanguageCard} />
+                                                    </div>
+                                                ) : windowItem.file.fileType === "game" ? (
                                                     <div className="col-span-2">
                                                         <GameContainer gameId={windowItem.file.id} />
                                                         <div className="mt-4 border-t border-[#7a7668] pt-4">
-                                                            <h3 className={styles.fileDetailTitle}>{windowItem.file.data.title}</h3>
-                                                            <p className="font-mono text-[10px] text-[#5a5a5a] mb-2">{windowItem.file.data.blurb}</p>
+                                                            <h3 className={styles.fileDetailTitle}>{stdFile!.data.title}</h3>
+                                                            <p className="font-mono text-[10px] text-[#5a5a5a] mb-2">{stdFile!.data.blurb}</p>
                                                             <div className={styles.fileDetailTags}>
-                                                                {windowItem.file.data.tags.map((item) => (
+                                                                {stdFile!.data.tags.map((item) => (
                                                                     <span key={item} className={styles.fileDetailTag}>
                                                                         {item}
                                                                     </span>
@@ -1078,13 +1037,13 @@ const DesktopSection = () => {
                                                                         className={styles.fileDetailPreviewButton}
                                                                         onClick={() => openImageWindow(
                                                                             previewImageSrc,
-                                                                            previewImage?.alt ?? windowItem.file.data.title,
-                                                                            windowItem.file.data.title
+                                                                            previewImage?.alt ?? stdFile!.data.title,
+                                                                            stdFile!.data.title
                                                                         )}
                                                                     >
                                                                         <img
                                                                             src={previewImageSrc}
-                                                                            alt={previewImage?.alt ?? `${windowItem.file.data.title} preview`}
+                                                                            alt={previewImage?.alt ?? `${stdFile!.data.title} preview`}
                                                                             className={styles.fileDetailPreviewImage}
                                                                         />
                                                                     </button>
@@ -1097,25 +1056,25 @@ const DesktopSection = () => {
                                                             ) : null}
                                                         </div>
                                                         <div className={styles.fileDetailContent}>
-                                                            <h3 className={styles.fileDetailTitle}>{windowItem.file.data.title}</h3>
+                                                            <h3 className={styles.fileDetailTitle}>{stdFile!.data.title}</h3>
 
                                                             <dl className={styles.fileDetailMeta}>
                                                                 <dt className={styles.fileDetailMetaKey}>role</dt>
-                                                                <dd>{windowItem.file.data.role}</dd>
+                                                                <dd>{stdFile!.data.role}</dd>
                                                                 <dt className={styles.fileDetailMetaKey}>year</dt>
-                                                                <dd>{windowItem.file.data.year}</dd>
+                                                                <dd>{stdFile!.data.year}</dd>
                                                                 <dt className={styles.fileDetailMetaKey}>stack</dt>
-                                                                <dd>{windowItem.file.data.stack.join(", ")}</dd>
+                                                                <dd>{stdFile!.data.stack.join(", ")}</dd>
                                                             </dl>
 
                                                             <div className={styles.fileDetailDescription}>
-                                                                <p>{windowItem.file.data.blurb}</p>
-                                                                {windowItem.file.data.notes ? <p className={styles.fileDetailNotes}>{windowItem.file.data.notes}</p> : null}
+                                                                <p>{stdFile!.data.blurb}</p>
+                                                                {stdFile!.data.notes ? <p className={styles.fileDetailNotes}>{stdFile!.data.notes}</p> : null}
                                                             </div>
 
-                                                            {windowItem.file.data.tags.length > 0 ? (
+                                                            {stdFile!.data.tags.length > 0 ? (
                                                                 <div className={styles.fileDetailTags}>
-                                                                    {windowItem.file.data.tags.map((item) => (
+                                                                    {stdFile!.data.tags.map((item) => (
                                                                         <span key={item} className={styles.fileDetailTag}>
                                                                             {item}
                                                                         </span>
@@ -1125,16 +1084,16 @@ const DesktopSection = () => {
 
                                                             {linkHref ? (
                                                                 <a href={linkHref} target="_blank" rel="noreferrer" className={styles.fileDetailLink}>
-                                                                    {windowItem.file.data.link}
+                                                                    {stdFile!.data.link}
                                                                 </a>
                                                             ) : (
-                                                                <p className={styles.fileDetailLinkFallback}>{windowItem.file.data.link || "—"}</p>
+                                                                <p className={styles.fileDetailLinkFallback}>{stdFile!.data.link || "—"}</p>
                                                             )}
 
-                                                            {windowItem.file.data.mediaAssets.length > 0 ? (
+                                                            {stdFile!.data.mediaAssets.length > 0 ? (
                                                                 <div className={styles.fileDetailMediaSection}>
                                                                     <h4 className={styles.fileDetailMediaHeading}>media assets</h4>
-                                                                    <div className={styles.fileDetailMediaList}>{windowItem.file.data.mediaAssets.map(renderMediaAsset)}</div>
+                                                                    <div className={styles.fileDetailMediaList}>{stdFile!.data.mediaAssets.map(renderMediaAsset)}</div>
                                                                 </div>
                                                             ) : null}
                                                         </div>
