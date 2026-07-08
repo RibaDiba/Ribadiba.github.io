@@ -7,10 +7,6 @@
 ![DaisyUI](https://img.shields.io/badge/DaisyUI-5833EE?style=flat-square&logo=daisyui)
 ![PWA](https://img.shields.io/badge/PWA-5A0FC8?style=flat-square&logo=pwa)
 
-A personal website designed as a functional, multi-windowed operating system interface, blending retro aesthetics with modern web technologies.
-
-![Website Mockup](public/ProjectImages/Website_Mockup.png)
-
 ## Overview
 This project transforms a traditional portfolio into an interactive "Retro Desktop" environment. It features a custom windowing system where users can drag, minimize, and explore different sections of the site as if they were using a classic OS.
 
