@@ -29,8 +29,8 @@ export const readmeMarkup =
 
    <span class="hl">Hardware/</span>  things i've built irl
    <span class="hl">UI/UX/</span>     things i've designed
-   <span class="hl">research/</span>  things i've measured
+   <span class="hl">research/</span>  things i'm researching
    <span class="hl">SWE/</span>       things i've shipped
-   <span class="hl">play/</span>      minigames + irl stuff
+   <span class="hl">play/</span>      minigames 
 
   — abir`;

@@ -10,6 +10,10 @@
 !.yarn/releases
 !.yarn/versions
 
+# claude stuff 
+/.claude
+CLAUDE.MD
+
 # testing
 /coverage
 

@@ -49,10 +49,7 @@
 }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 18% -10%, #1b1b1f 0%, transparent 60%),
-    radial-gradient(900px 500px at 112% 115%, #15151a 0%, transparent 55%),
-    var(--abir-bg);
+  background: var(--abir-bg);
   color: var(--abir-ink);
   font-family: var(--abir-sans);
   margin: 0;

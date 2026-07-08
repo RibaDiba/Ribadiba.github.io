@@ -1,55 +1,45 @@
 import { getAssetPath } from "@/utils/paths";
+import Leastudo from "@/components/DesignPages/Leastudo";
+import SaveRe from "@/components/DesignPages/SaveRe";
+import Recall from "@/components/DesignPages/Recall";
+import Sol from "@/components/DesignPages/Sol";
+import {
+    portfolioFileTypes,
+    portfolioMediaTypes,
+    type DesignCardProps,
+    type DesignLanguageCard,
+    type DesignRoleCard,
+    type PortfolioDesktopNode,
+    type PortfolioDesignFileNode,
+    type PortfolioFileData,
+    type PortfolioFileNode,
+    type PortfolioFileType,
+    type PortfolioFolderNode,
+    type PortfolioMediaAsset,
+    type PortfolioMediaSource,
+    type PortfolioMediaType,
+    type PortfolioPreviewImage,
+    type PortfolioStandardFileNode,
+} from "@/interfaces/portfolio";
 
-export const portfolioFileTypes = ["img", "code", "paper", "game"] as const;
-export type PortfolioFileType = (typeof portfolioFileTypes)[number];
-
-export const portfolioMediaTypes = ["image", "video", "document"] as const;
-export type PortfolioMediaType = (typeof portfolioMediaTypes)[number];
-
-export type PortfolioMediaSource = "local" | "external";
-
-export interface PortfolioMediaAsset {
-    type: PortfolioMediaType;
-    source: PortfolioMediaSource;
-    src: string;
-    alt?: string;
-}
-
-export interface PortfolioPreviewImage {
-    source: PortfolioMediaSource;
-    src: string;
-    alt?: string;
-}
-
-export interface PortfolioFileData {
-    title: string;
-    role: string;
-    year: string;
-    stack: string[];
-    blurb: string;
-    notes: string;
-    tags: string[];
-    link: string;
-    previewImage?: PortfolioPreviewImage;
-    mediaAssets: PortfolioMediaAsset[];
-}
-
-export interface PortfolioFolderNode {
-    id: string;
-    label: string;
-    kind: "folder";
-    children: PortfolioFileNode[];
-}
-
-export interface PortfolioFileNode {
-    id: string;
-    label: string;
-    kind: "file";
-    fileType: PortfolioFileType;
-    data: PortfolioFileData;
-}
-
-export type PortfolioDesktopNode = PortfolioFolderNode | PortfolioFileNode;
+export {
+    portfolioFileTypes,
+    portfolioMediaTypes,
+    type DesignCardProps,
+    type DesignLanguageCard,
+    type DesignRoleCard,
+    type PortfolioDesktopNode,
+    type PortfolioDesignFileNode,
+    type PortfolioFileData,
+    type PortfolioFileNode,
+    type PortfolioFileType,
+    type PortfolioFolderNode,
+    type PortfolioMediaAsset,
+    type PortfolioMediaSource,
+    type PortfolioMediaType,
+    type PortfolioPreviewImage,
+    type PortfolioStandardFileNode,
+} from "@/interfaces/portfolio";
 
 const localMedia = (src: string, type: PortfolioMediaType, alt?: string): PortfolioMediaAsset => ({
     type,
@@ -146,78 +136,84 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         kind: "folder",
         children: [
             {
-                id: "Leastudo",
-                label: "Lease.proj",
+                id: "sol-design",
+                label: "Sol.des",
                 kind: "file",
-                fileType: "code",
-                data: {
-                    title: "Leastudo",
-                    role: "Frontend Architect",
-                    year: "2025",
-                    stack: ["Next.js", "Node", "MongoDB", "Tailwind"],
-                    blurb: "A full-stack subleasing marketplace optimized for the UMD student ecosystem. Features a responsive Next.js frontend integrated with a Node.js/MongoDB backend to streamline off-campus housing discovery and peer-to-peer lease transfers.",
-                    notes: "Spearheaded the UI/UX design system in Figma and implemented the frontend architecture using modern React patterns.",
-                    tags: ["Figma", "Next.js", "Product Design"],
-                    link: "Almost Done!",
-                    previewImage: localPreview("/ProjectImages/Leastudo_Mockup.png", "Leastudo project preview"),
-                    mediaAssets: []
-                }
+                fileType: "design",
+                component: Sol,
+                defaultSize: { width: 700, height: 736 },
+                roleCard: {
+                    role: "Just Building",
+                    year: "???",
+                    stack: "Next.js \u00b7 WebGL \u00b7 TS",
+                    tags: ["Scheduling", "Open-Source", "UMD"],
+                    linkText: "github.com/SolUMD \u2192",
+                    linkHref: "https://github.com/SolUMD",
+                },
+                designLanguageCard: {
+                    swatches: ["var(--gold)", "var(--coral)", "var(--espresso)", "var(--teal)"],
+                    description: "Sunset gold into coral over warm cream, Clash Display against wonky Fraunces italics. Insipred by a golden hour sunset to make a spreadsheet seem friendly.",
+                },
             },
             {
-                id: "Recall",
-                label: "Recall.proj",
+                id: "leastudo-design",
+                label: "Lease.des",
                 kind: "file",
-                fileType: "code",
-                data: {
-                    title: "Recall",
-                    role: "Full Stack Engineer",
-                    year: "2026",
-                    stack: ["Swift", "ArcFace", "Ollama", "CoreML"],
-                    blurb: "An iOS-native cognitive aid for dementia patients utilizing on-device computer vision. Implements a zero-shot facial recognition framework (ArcFace) and local LLM (Ollama) to identify and provide context for loved ones and caretakers without requiring cloud processing.",
-                    notes: "Awarded Winner at Bitcamp 2026 among 220+ projects. Engineered the on-device inference pipeline and user-centric interface.",
-                    tags: ["Computer Vision", "iOS Development", "Edge AI"],
-                    link: "https://github.com/akhilapnuri/RecallMobileApp",
-                    previewImage: localPreview("/ProjectImages/Recall_Image.png", "Recall Mockup Preview"),
-                    mediaAssets: []
-                }
+                fileType: "design",
+                component: Leastudo,
+                defaultSize: { width: 700, height: 736 },
+                roleCard: {
+                    role: "Designer & Engineer",
+                    year: "2026\u2014",
+                    stack: "Next.js \u00b7 MongoDB \u00b7 AWS S3",
+                    tags: ["Figma", "mobile", "housing"],
+                },
+                designLanguageCard: {
+                    swatches: ["#7A1B1B", "#E7B6B6", "#4A5565"],
+                    description: "Maroon & rose on warm cream, UMD's colors with a modern feel. Bright red colors, a reflection of Zillow's design.",
+                },
             },
             {
-                id: "SavRe",
-                label: "SaveRe.proj",
+                id: "recall-design",
+                label: "Recall.des",
                 kind: "file",
-                fileType: "code",
-                data: {
-                    title: "SavRe",
-                    role: "Full Stack Developer",
-                    year: "2025",
-                    stack: ["Next.js", "FastAPI", "Tesseract OCR", "Gemini API"],
-                    blurb: "An AI-powered inventory and nutrition management system. Leverages OCR for automated grocery receipt parsing and integrates the Gemini API to generate dynamic recipes based on real-time pantry data and expiration tracking.",
-                    notes: "Developed for HackPrinceton Fall 2025, focusing on data extraction accuracy and generative AI integration.",
-                    tags: ["NLP", "Generative AI", "FastAPI"],
-                    link: "https://github.com/RibaDiba/SaveRe",
-                    previewImage: localPreview("/ProjectImages/SaveRe_Mockup.png", "SavRe Mockup"),
-                    mediaAssets: []
-                }
+                fileType: "design",
+                component: Recall,
+                defaultSize: { width: 700, height: 616 },
+                roleCard: {
+                    role: "Designer & Engineer",
+                    year: "Bitcamp 2026",
+                    stack: "SwiftUI \u00b7 CoreML \u00b7 Ollama",
+                    tags: ["On Device AI", "Mobile", "Design"],
+                    linkText: "github.com/akhilapnuri/RecallMobileApp \u2192",
+                    linkHref: "https://github.com/akhilapnuri/RecallMobileApp"
+                },
+                designLanguageCard: {
+                    swatches: ["#21622D", "#FAF6ED", "#435D47"],
+                    description: "Forest green & warm cream, meant to be a hyper focused, simple UI. Large buttons, few options are on purpose.",
+                },
             },
             {
-                id: "Personal Website",
-                label: "PWeb.proj",
+                id: "savre-design",
+                label: "SavRe.des",
                 kind: "file",
-                fileType: "code",
-                data: {
-                    title: "Retro Desktop Portfolio",
-                    role: "Motion & Web Engineer",
-                    year: "2024",
-                    stack: ["Next.js", "Framer Motion", "TypeScript"],
-                    blurb: "A retro-inspired interactive desktop environment built with Next.js and Framer Motion. Features a multi-window manager, custom physics-based interactions, and a declarative store-driven architecture.",
-                    notes: "Iteration v3 focusing on advanced motion design and nostalgic computing aesthetics.",
-                    tags: ["Web", "Motion Design", "UX Architecture"],
-                    link: "ribadiba.github.io",
-                    previewImage: localPreview("/ProjectImages/Website_Mockup.png"),
-                    mediaAssets: []
-                }
-            }
-        ]
+                fileType: "design",
+                component: SaveRe,
+                defaultSize: { width: 700, height: 716 },
+                roleCard: {
+                    role: "Full-Stack Developer",
+                    year: "F25 Hack Princeton",
+                    stack: "Next.js \u00b7 FastAPI \u00b7 Gemini API",
+                    tags: ["Hackathon", "OCR", "Design"],
+                    linkText: "github.com/RibaDiba/SaveRe \u2192",
+                    linkHref: "https://github.com/RibaDiba/SaveRe",
+                },
+                designLanguageCard: {
+                    swatches: ["#354A33", "#95C590", "#FAF6ED"],
+                    description: "Forest green on cream, pill buttons, made to feel green with a sense of calm. Minmal UI to keep things organized",
+                },
+            },
+        ],
     },
     {
         id: "research",
@@ -225,9 +221,9 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
         kind: "folder",
         children: [
             {
-                id: "princeton",
-                label: "tumor_segmentation.paper",
-                kind: "file",
+                id: "Princeton",
+                label: "tumor.paper",
+                kind: "file",   
                 fileType: "paper",
                 data: {
                     title: "Tumor Multimodal Segmentation",
@@ -235,12 +231,29 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                     year: "2024—Present",
                     stack: ["Python", "PyTorch", "Detectron2", "OpenCV"],
                     blurb: "Researching multimodal deep learning architectures for preclinical tumor analysis. Developed a custom input pipeline that incorporates depth-map telemetry into color-space channels to enhance segmentation precision in complex biological environments.",
-                    notes: "Currently preparing findings for publication; focusing on feature fusion techniques for medical imaging.",
+                    notes: "Advised by Prof. Puchalla.",
                     tags: ["Deep Learning", "Medical Imaging", "Computer Vision"],
-                    link: "",
+                    link: "https://github.com/RibaDiba/tumor-segmentation",
                     mediaAssets: []
                 }
             },
+            {
+                id: "Maryland",
+                label: "sensaug.paper",
+                kind: "file",
+                fileType: "paper",
+                data: {
+                    title: "Sensitivity Anaylsis with PCA",
+                    role: "Undergraduate Researcher",
+                    year: "2026-Present", 
+                    stack: ["Python", "PyTorch", "MMEngine", "OpenCV"],
+                    blurb: "Researching incoperating principal component analysis via gradient decent of differentiable augmentations to improve model preformance.",
+                    notes: "Advised by Prof. Lin, Dr. Laura Zheng.",
+                    tags: ["Deep Learning", "Medical Imaging", "Computer Vision"],
+                    link: "https://github.com/RibaDiba/tumor-segmentation",
+                    mediaAssets: []
+                }
+            }
         ]
     },
     {

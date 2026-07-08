@@ -1,0 +1,44 @@
+.hero {
+    display: block;
+    width: 680px;
+    max-width: none;
+    height: auto;
+}
+
+.appBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #faf6ed;
+    border: 1.5px solid #ddd6c8;
+    border-radius: 14px;
+    padding: 7px 16px 7px 7px;
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--ink);
+    box-shadow: 0 12px 20px -11px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition:
+        scale 0.4s cubic-bezier(0.34, 1.8, 0.64, 1),
+        translate 0.4s cubic-bezier(0.34, 1.8, 0.64, 1);
+}
+.appBtn:hover {
+    scale: 1.06;
+    translate: 0 -3px;
+}
+
+.badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+.badge svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+}

@@ -1,0 +1,272 @@
+/* Sol.des — ported from the handoff's sol-showcase.css.
+   Palette + font tokens live on .root (set on the DesignStage outer).
+   Clash Display / Fraunces come from the app's next/font variables.
+   The sol-components.js var mismatch (--sol-sand/--sol-sky) is resolved
+   here by using the real --sand/--sky tokens directly. */
+
+.root {
+    --cream: #fff5e8;
+    --cream-mid: #fff2e4;
+    --peach: #ffe8d6;
+    --gold: #ffefa9;
+    --coral: #f1948c;
+    --coral-deep: #e07370;
+    --espresso: #3d1f1f;
+    --cocoa: #6b4226;
+    --mocha: #8b6b4f;
+    --walnut: #69503f;
+    --sand: #f5d5c0;
+    --taupe: #cebeb3;
+    --teal: #3f6966;
+    --ice: #e8fcff;
+    --sky: #c0eff5;
+    --slate-teal: #4f7e8b;
+    --sage: #b3ccce;
+
+    --sol-display: var(--font-clash), "Futura", "Century Gothic", sans-serif;
+    --sol-serif: var(--font-fraunces), Georgia, serif;
+    --sol-sans: var(--font-inter), system-ui, sans-serif;
+    --mono: var(--font-jetbrains), ui-monospace, monospace;
+
+    font-family: var(--sol-sans);
+}
+
+/* ---- ambient float ---- */
+@keyframes solFloat {
+    0% {
+        translate: 0 0;
+        rotate: var(--r, 0deg);
+    }
+    50% {
+        translate: 0 var(--amp, -14px);
+        rotate: calc(var(--r, 0deg) + 2deg);
+    }
+    100% {
+        translate: 0 0;
+        rotate: var(--r, 0deg);
+    }
+}
+.float {
+    transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .float {
+        animation: solFloat var(--dur, 7s) ease-in-out infinite;
+        animation-delay: var(--delay, 0s);
+    }
+}
+
+/* ---- type atoms ---- */
+.word {
+    font-family: var(--sol-display);
+    font-weight: 600;
+    color: var(--espresso);
+    margin: 0;
+}
+.sub {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-variation-settings: "SOFT" 0, "WONK" 1;
+    color: var(--cocoa);
+    margin: 0;
+}
+
+/* ---- shader mount ---- */
+.shaderBg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ---- course card (data-driven) ---- */
+.courseCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+    min-height: 50px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 7px 11px;
+    box-shadow: 0 8px 16px -9px rgba(0, 0, 0, 0.35);
+    background-image: linear-gradient(90deg, var(--cream) 0%, var(--peach) 100%);
+}
+.ccRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.ccProf {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--mocha);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+.ccStars {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--cocoa);
+    flex-shrink: 0;
+}
+.ccCode {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.1;
+    color: var(--cocoa);
+    text-align: right;
+    margin: 0;
+}
+
+/* ---- meta card ---- */
+.card {
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #efece0;
+    border: 2px solid #1a1a1a;
+    padding: 10px 12px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+}
+.meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px 8px;
+    margin-bottom: 8px;
+}
+.k {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #5a5a5a;
+}
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0;
+}
+.tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    background: #fff;
+    border: 1px solid #1a1a1a;
+    padding: 2px 6px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #0055aa;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+/* ---- design-language card ---- */
+.langCard {
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 11px;
+    color: #1a1a1a;
+    background: #efece0;
+    border: 2px solid #1a1a1a;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.sws {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.sws span {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ---- mini "how it works" stepper ---- */
+.stepper {
+    display: flex;
+    gap: 10px;
+}
+.seg {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.bar {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+.barFill {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+}
+.lbl {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-size: 9.5px;
+    line-height: 1.2;
+}
+
+/* ---- feature panel (filmstrip) ---- */
+.panel {
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    box-shadow: 0 20px 34px -16px rgba(0, 0, 0, 0.45);
+}
+.panelBrown {
+    background: var(--walnut);
+}
+.panelTeal {
+    background: var(--teal);
+}
+.phead {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.25;
+    margin: 0;
+}
+.panelBrown .phead {
+    color: var(--sand);
+}
+.panelTeal .phead {
+    color: var(--sky);
+}
+.pbody {
+    font-family: var(--sol-serif);
+    font-style: italic;
+    font-size: 10px;
+    line-height: 1.35;
+    margin: 0;
+}
+.panelBrown .pbody {
+    color: var(--taupe);
+}
+.panelTeal .pbody {
+    color: var(--sage);
+}

@@ -1,0 +1,302 @@
+/* ============================================================
+   Shared .des content atoms + motion.
+   Ported from the handoff's shared class vocabulary (ls-* atoms).
+   Recolored per project via CSS custom properties set on the stage:
+     --accent  project accent (headline .red, sub bold, wordmark)
+     --ink     ink color (default #2A211E)
+   Fonts come from the app's next/font variables.
+   ============================================================ */
+
+.root {
+    --ink: #2a211e;
+    --sans: var(--font-inter), system-ui, sans-serif;
+    --mono: var(--font-jetbrains), ui-monospace, monospace;
+    font-family: var(--sans);
+    color: var(--ink);
+}
+
+/* ---- entrance cascade ---- */
+@keyframes lsEnter {
+    from {
+        opacity: 0;
+        translate: 0 46px;
+        scale: 0.92;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
+}
+
+.enter {
+    /* base = visible end-state (reduced motion / print safe) */
+}
+
+/* ---- continuous ambient bob (per-element --amp/--dur/--delay/--r/--rot) ---- */
+@keyframes floatBob {
+    0% {
+        translate: 0 0;
+        rotate: var(--r, 0deg);
+    }
+    50% {
+        translate: 0 var(--amp, -9px);
+        rotate: calc(var(--r, 0deg) + var(--rot, 0deg));
+    }
+    100% {
+        translate: 0 0;
+        rotate: var(--r, 0deg);
+    }
+}
+
+.float {
+    transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .enter {
+        animation: lsEnter 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .float {
+        animation: floatBob var(--dur, 8s) ease-in-out infinite;
+        animation-delay: var(--delay, 0s);
+    }
+}
+
+/* ---- headline / sub ---- */
+.headline {
+    font-family: var(--sans);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+.headlineRed {
+    composes: headline;
+    color: var(--accent);
+    font-size: 27px;
+    line-height: 1.05;
+}
+.headlineInk {
+    composes: headline;
+    color: var(--ink);
+    font-size: 23px;
+    line-height: 1.05;
+    margin-top: 1px;
+}
+.sub {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 9px 0 0;
+    color: var(--ink);
+}
+.sub b {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.wordmark {
+    font-family: var(--sans);
+    font-weight: 900;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    margin: 0;
+    text-align: center;
+}
+
+/* ---- meta / notes card ---- */
+.card {
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #efece0;
+    border: 2px solid #1a1a1a;
+    padding: 10px 12px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+    transition: translate 0.35s cubic-bezier(0.34, 1.6, 0.64, 1);
+}
+.card:hover {
+    translate: 0 -3px;
+}
+.meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px 8px;
+    margin-bottom: 8px;
+}
+.k {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #5a5a5a;
+}
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0;
+}
+.tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    background: #fff;
+    border: 1px solid #1a1a1a;
+    padding: 2px 6px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+    transition: scale 0.3s cubic-bezier(0.34, 1.8, 0.64, 1);
+}
+.tag:hover {
+    scale: 1.14;
+}
+.link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #0055aa;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 2px;
+    transition: scale 0.3s cubic-bezier(0.34, 1.8, 0.64, 1);
+    background: none;
+    border: none;
+    padding: 0;
+}
+.link:hover {
+    scale: 1.12;
+}
+
+/* design-language card: swatch row + copy */
+.langCard {
+    composes: card;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.langSwatches {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.langSwatches span {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ---- palette chip ---- */
+.palette {
+    display: flex;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.68);
+    padding: 7px 9px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.28);
+}
+.sw {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px -2px rgba(0, 0, 0, 0.35);
+}
+
+/* ---- pill/rounded action button (ls-btn) — Leastudo & Recall ---- */
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 12px 20px -9px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    transition:
+        scale 0.4s cubic-bezier(0.34, 1.8, 0.64, 1),
+        translate 0.4s cubic-bezier(0.34, 1.8, 0.64, 1),
+        box-shadow 0.3s ease;
+}
+.btn:hover {
+    scale: 1.08;
+    translate: 0 -4px;
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+}
+.btn:active {
+    scale: 0.95;
+    translate: 0 -1px;
+    box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.4);
+}
+.btnPrimary {
+    background: var(--btn-primary, var(--accent));
+}
+.btnSecondary {
+    background: #7d7676;
+}
+.ico {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #fff;
+    border-radius: 4px;
+    position: relative;
+    flex-shrink: 0;
+}
+.icoPlus::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 3px;
+    bottom: 3px;
+    width: 1.5px;
+    background: #fff;
+    transform: translateX(-50%);
+}
+.icoPlus::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    right: 3px;
+    height: 1.5px;
+    background: #fff;
+    transform: translateY(-50%);
+}
+.icoMag {
+    border-radius: 50%;
+}
+.icoMag::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 1.5px;
+    background: #fff;
+    bottom: -3px;
+    right: -3px;
+    transform: rotate(45deg);
+}
+
+/* ---- photo card (ls-photo) — Leastudo & Recall ---- */
+.photo {
+    border-radius: 9px;
+    display: block;
+    box-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.4);
+    transition:
+        scale 0.4s cubic-bezier(0.34, 1.6, 0.64, 1),
+        translate 0.4s cubic-bezier(0.34, 1.6, 0.64, 1),
+        box-shadow 0.35s ease;
+}
+.photo:hover {
+    scale: 1.06;
+    translate: 0 -8px;
+    box-shadow: 0 28px 42px -14px rgba(0, 0, 0, 0.5);
+}
+.photoFade {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+}

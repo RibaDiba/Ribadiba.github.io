@@ -254,6 +254,55 @@
     box-shadow: 0 4px 0 var(--retro-icon-stroke), 0 8px 0 var(--retro-icon-stroke), 0 12px 0 var(--retro-icon-stroke);
 }
 
+.iconFileDesign {
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.iconFileDesign::after {
+    content: ".png";
+    top: 26px;
+    left: 0;
+    right: 0;
+    height: auto;
+    background: transparent;
+    color: #888;
+    text-align: center;
+    font-family: var(--retro-icon-mono);
+    font-size: 8px;
+    box-shadow: none;
+}
+
+.iconFileDesignImg {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    width: calc(100% - 8px);
+    height: 20px;
+    object-fit: cover;
+    display: block;
+}
+
+.fileDetailDesign {
+    grid-column: span 2;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+/* design windows: let the scale-to-fit stage own the full body, no gutter */
+.windowBodyDesign {
+    padding: 0;
+    overflow: hidden;
+}
+.windowBodyDesign .fileDetail {
+    height: 100%;
+    padding: 0;
+    display: block;
+}
+
 .windowFrame {
     position: absolute;
     min-width: 280px;
