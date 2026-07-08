@@ -10,7 +10,7 @@ export interface DesignRoleCard {
     year: string;
     stack: string;
     tags: string[];
-    linkText: string;
+    linkText?: string;
     linkHref?: string;
 }
 

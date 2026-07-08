@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import DesignStage from "./shared/DesignStage";
 import SolShader from "./SolShader";
 import styles from "./Sol.module.css";
+import shared from "./shared/designShared.module.css";
 
 import type { DesignCardProps } from "@/interfaces/portfolio";
 
@@ -133,123 +134,160 @@ export default function Sol({ roleCard, designLanguageCard }: DesignCardProps) {
             behind={<SolShader className={styles.shaderBg} />}
         >
             {/* filmstrip feature panels */}
-            {PANELS.map((panel) => (
+            {PANELS.map((panel, idx) => (
                 <div
                     key={panel.step}
-                    className={`${styles.panel} ${panel.theme === "teal" ? styles.panelTeal : styles.panelBrown}`}
-                    style={{ position: "absolute", ...panel.style }}
+                    className={shared.enter}
+                    style={{
+                        position: "absolute",
+                        ...panel.style,
+                        animationDelay: `${idx * 0.06}s`
+                    }}
                 >
-                    <SolStepper activeStep={panel.step} theme={panel.theme} />
-                    <p className={styles.phead}>{panel.head}</p>
-                    <p className={styles.pbody}>{panel.body}</p>
+                    <div
+                        className={`${styles.panel} ${panel.theme === "teal" ? styles.panelTeal : styles.panelBrown}`}
+                        style={{ height: "100%" }}
+                    >
+                        <SolStepper activeStep={panel.step} theme={panel.theme} />
+                        <p className={styles.phead}>{panel.head}</p>
+                        <p className={styles.pbody}>{panel.body}</p>
+                    </div>
                 </div>
             ))}
 
             {/* floating course cards */}
-            {FLOAT_CARDS.map((card) => (
-                <SolCourseCard
+            {FLOAT_CARDS.map((card, idx) => (
+                <div
                     key={card.course}
-                    course={card.course}
-                    professor={card.professor}
-                    rating={card.rating}
-                    className={styles.float}
-                    style={v({
+                    className={shared.enter}
+                    style={{
                         position: "absolute",
-                        width: card.w,
-                        top: card.top,
                         left: card.left,
+                        top: card.top,
                         zIndex: card.z,
-                        "--r": card.r,
-                        "--dur": card.dur,
-                        "--delay": card.delay
-                    })}
-                />
+                        animationDelay: `${0.25 + idx * 0.05}s`
+                    }}
+                >
+                    <SolCourseCard
+                        course={card.course}
+                        professor={card.professor}
+                        rating={card.rating}
+                        className={styles.float}
+                        style={v({
+                            width: card.w,
+                            "--r": card.r,
+                            "--dur": card.dur,
+                            "--delay": card.delay
+                        })}
+                    />
+                </div>
             ))}
 
             {/* center wordmark */}
             <div
-                className={styles.float}
-                style={v({
+                className={shared.enter}
+                style={{
                     position: "absolute",
                     top: 340,
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 3,
-                    textAlign: "center",
-                    "--amp": "-8px",
-                    "--dur": "9.5s"
-                })}
+                    animationDelay: ".08s"
+                }}
             >
-                <p className={styles.word} style={{ fontSize: 72 }}>
-                    Sol.
-                </p>
-                <p className={styles.sub} style={{ fontSize: 20, marginTop: 6 }}>
-                    Schedule of Classes, Simplified.
-                </p>
+                <div
+                    className={styles.float}
+                    style={v({
+                        textAlign: "center",
+                        "--amp": "-8px",
+                        "--dur": "9.5s"
+                    })}
+                >
+                    <p className={styles.word} style={{ fontSize: 72 }}>
+                        Sol.
+                    </p>
+                    <p className={styles.sub} style={{ fontSize: 20, marginTop: 6 }}>
+                        Schedule of Classes, Simplified.
+                    </p>
+                </div>
             </div>
 
             {/* role card */}
             <div
-                className={`${styles.card} ${styles.float}`}
-                style={v({
+                className={shared.enter}
+                style={{
                     position: "absolute",
                     bottom: 20,
                     left: 26,
-                    width: 230,
                     zIndex: 7,
-                    "--r": "-1deg",
-                    "--amp": "-6px",
-                    "--dur": "10.5s",
-                    "--delay": ".4s"
-                })}
+                    animationDelay: ".42s"
+                }}
             >
-                <div className={styles.meta}>
-                    <div className={styles.k}>role</div>
-                    <div>{roleCard.role}</div>
-                    <div className={styles.k}>year</div>
-                    <div>{roleCard.year}</div>
-                    <div className={styles.k}>stack</div>
-                    <div>{roleCard.stack}</div>
+                <div
+                    className={`${styles.card} ${styles.float}`}
+                    style={v({
+                        width: 230,
+                        "--r": "-1deg",
+                        "--amp": "-6px",
+                        "--dur": "10.5s",
+                        "--delay": ".4s"
+                    })}
+                >
+                    <div className={styles.meta}>
+                        <div className={styles.k}>role</div>
+                        <div>{roleCard.role}</div>
+                        <div className={styles.k}>year</div>
+                        <div>{roleCard.year}</div>
+                        <div className={styles.k}>stack</div>
+                        <div>{roleCard.stack}</div>
+                    </div>
+                    <div className={styles.tags}>
+                        {roleCard.tags.map((tag) => (
+                            <span key={tag} className={styles.tag}>
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                    {roleCard.linkHref ? (
+                        <a className={styles.link} href={roleCard.linkHref} target="_blank" rel="noreferrer">
+                            {roleCard.linkText}
+                        </a>
+                    ) : (
+                        <span className={styles.link}>{roleCard.linkText}</span>
+                    )}
                 </div>
-                <div className={styles.tags}>
-                    {roleCard.tags.map((tag) => (
-                        <span key={tag} className={styles.tag}>
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-                {roleCard.linkHref ? (
-                    <a className={styles.link} href={roleCard.linkHref} target="_blank" rel="noreferrer">
-                        {roleCard.linkText}
-                    </a>
-                ) : (
-                    <span className={styles.link}>{roleCard.linkText}</span>
-                )}
             </div>
 
             {/* design-language card */}
             <div
-                className={`${styles.langCard} ${styles.float}`}
-                style={v({
+                className={shared.enter}
+                style={{
                     position: "absolute",
                     bottom: 20,
                     right: 26,
-                    width: 300,
                     zIndex: 7,
-                    "--r": "1deg",
-                    "--amp": "-6px",
-                    "--dur": "11.5s",
-                    "--delay": ".7s"
-                })}
+                    animationDelay: ".48s"
+                }}
             >
-                <div className={styles.sws}>
-                    {designLanguageCard.swatches.map((color, idx) => (
-                        <span key={idx} style={{ background: color }} />
-                    ))}
-                </div>
-                <div>
-                    <div className={styles.k}>design language</div>
-                    <div>{designLanguageCard.description}</div>
+                <div
+                    className={`${styles.langCard} ${styles.float}`}
+                    style={v({
+                        width: 300,
+                        "--r": "1deg",
+                        "--amp": "-6px",
+                        "--dur": "11.5s",
+                        "--delay": ".7s"
+                    })}
+                >
+                    <div className={styles.sws}>
+                        {designLanguageCard.swatches.map((color, idx) => (
+                            <span key={idx} style={{ background: color }} />
+                        ))}
+                    </div>
+                    <div>
+                        <div className={styles.k}>design language</div>
+                        <div>{designLanguageCard.description}</div>
+                    </div>
                 </div>
             </div>
         </DesignStage>

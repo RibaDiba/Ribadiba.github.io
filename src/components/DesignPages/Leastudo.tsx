@@ -28,10 +28,10 @@ const STAGE_BG =
 const v = (props: Record<string, string | number>) => props as CSSProperties;
 
 const PHOTOS = [
-    { src: "leastudo-card-day1.png", w: 192, left: 56, top: 370, rot: -13, z: 1, delay: ".20s" },
-    { src: "leastudo-card-tempo.png", w: 206, left: 196, top: 338, rot: -4, z: 2, delay: ".26s" },
-    { src: "leastudo-card-hub.png", w: 206, left: 330, top: 328, rot: 4, z: 3, delay: ".32s" },
-    { src: "leastudo-card-day2.png", w: 192, left: 466, top: 366, rot: 13, z: 1, delay: ".38s" }
+    { src: "leastudo-card-day1.png", w: 192, left: 56, top: 370, rot: -13, z: 1, delay: ".20s", amp: "-8px", dur: "8.5s", floatDelay: ".1s" },
+    { src: "leastudo-card-tempo.png", w: 206, left: 196, top: 338, rot: -4, z: 2, delay: ".26s", amp: "-10px", dur: "9.2s", floatDelay: ".3s" },
+    { src: "leastudo-card-hub.png", w: 206, left: 330, top: 328, rot: 4, z: 3, delay: ".32s", amp: "-7px", dur: "8s", floatDelay: ".5s" },
+    { src: "leastudo-card-day2.png", w: 192, left: 466, top: 366, rot: 13, z: 1, delay: ".38s", amp: "-9px", dur: "9.6s", floatDelay: ".2s" }
 ];
 
 export default function Leastudo({ roleCard, designLanguageCard }: DesignCardProps) {
@@ -114,22 +114,35 @@ export default function Leastudo({ roleCard, designLanguageCard }: DesignCardPro
 
             {/* fanned photo cards */}
             {PHOTOS.map((photo) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <div
                     key={photo.src}
-                    className={`${shared.photo} ${shared.enter}`}
-                    src={getAssetPath(`/DesignAssets/${photo.src}`)}
-                    alt=""
+                    className={shared.enter}
                     style={{
                         position: "absolute",
-                        width: photo.w,
                         left: photo.left,
                         top: photo.top,
-                        transform: `rotate(${photo.rot}deg)`,
                         zIndex: photo.z,
                         animationDelay: photo.delay
                     }}
-                />
+                >
+                    <div
+                        className={shared.float}
+                        style={v({
+                            "--amp": photo.amp,
+                            "--dur": photo.dur,
+                            "--delay": photo.floatDelay,
+                            "--r": `${photo.rot}deg`
+                        })}
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            className={shared.photo}
+                            src={getAssetPath(`/DesignAssets/${photo.src}`)}
+                            alt=""
+                            style={{ width: photo.w }}
+                        />
+                    </div>
+                </div>
             ))}
 
             {/* design-language card */}

@@ -50,6 +50,20 @@ const getNodeIconVariant = (node: PortfolioDesktopNode | PortfolioFileNode): Ret
     return node.fileType;
 };
 
+const getGithubRepoInfo = (url: string) => {
+    try {
+        const path = url.replace("https://github.com/", "");
+        const parts = path.split("/");
+        if (parts.length >= 2) {
+            return {
+                owner: parts[0],
+                repo: parts[1]
+            };
+        }
+    } catch (e) {}
+    return null;
+};
+
 const createWindowPosition = (index: number): WindowPosition => ({
     x: 80 + (index * 28) % 220,
     y: 60 + (index * 22) % 140
@@ -1027,68 +1041,182 @@ const DesktopSection = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                ) : (
-                                                    <>
-                                                        <div className={styles.fileDetailPreviewWrapper}>
-                                                            <div className={styles.fileDetailPreview}>
-                                                                {previewImageSrc ? (
-                                                                    <button
-                                                                        type="button"
-                                                                        className={styles.fileDetailPreviewButton}
-                                                                        onClick={() => openImageWindow(
-                                                                            previewImageSrc,
-                                                                            previewImage?.alt ?? stdFile!.data.title,
-                                                                            stdFile!.data.title
-                                                                        )}
-                                                                    >
-                                                                        <img
-                                                                            src={previewImageSrc}
-                                                                            alt={previewImage?.alt ?? `${stdFile!.data.title} preview`}
-                                                                            className={styles.fileDetailPreviewImage}
-                                                                        />
-                                                                    </button>
-                                                                ) : (
-                                                                    <div className={styles.fileDetailPreviewPlaceholder}>[ no preview ]</div>
-                                                                )}
-                                                            </div>
-                                                            {previewImageSrc ? (
-                                                                <span className={styles.fileDetailPreviewHint}>click to expand ↗</span>
-                                                            ) : null}
-                                                        </div>
-                                                        <div className={styles.fileDetailContent}>
-                                                            <h3 className={styles.fileDetailTitle}>{stdFile!.data.title}</h3>
-
-                                                            <dl className={styles.fileDetailMeta}>
-                                                                <dt className={styles.fileDetailMetaKey}>role</dt>
-                                                                <dd>{stdFile!.data.role}</dd>
-                                                                <dt className={styles.fileDetailMetaKey}>year</dt>
-                                                                <dd>{stdFile!.data.year}</dd>
-                                                                <dt className={styles.fileDetailMetaKey}>stack</dt>
-                                                                <dd>{stdFile!.data.stack.join(", ")}</dd>
-                                                            </dl>
-
-                                                            <div className={styles.fileDetailDescription}>
-                                                                <p>{stdFile!.data.blurb}</p>
-                                                                {stdFile!.data.notes ? <p className={styles.fileDetailNotes}>{stdFile!.data.notes}</p> : null}
-                                                            </div>
-
-                                                            {stdFile!.data.tags.length > 0 ? (
-                                                                <div className={styles.fileDetailTags}>
-                                                                    {stdFile!.data.tags.map((item) => (
-                                                                        <span key={item} className={styles.fileDetailTag}>
-                                                                            {item}
-                                                                        </span>
-                                                                    ))}
+                                                ) : (() => {
+                                                    const githubInfo = stdFile && stdFile.data.link && stdFile.data.link.startsWith("https://github.com/")
+                                                        ? getGithubRepoInfo(stdFile.data.link)
+                                                        : null;
+                                                    return (
+                                                        <>
+                                                            <div className={styles.fileDetailPreviewWrapper}>
+                                                                <div className={styles.fileDetailPreview}>
+                                                                    {previewImageSrc ? (
+                                                                        <button
+                                                                            type="button"
+                                                                            className={styles.fileDetailPreviewButton}
+                                                                            onClick={() => openImageWindow(
+                                                                                previewImageSrc,
+                                                                                previewImage?.alt ?? stdFile!.data.title,
+                                                                                stdFile!.data.title
+                                                                            )}
+                                                                        >
+                                                                            <img
+                                                                                src={previewImageSrc}
+                                                                                alt={previewImage?.alt ?? `${stdFile!.data.title} preview`}
+                                                                                className={styles.fileDetailPreviewImage}
+                                                                            />
+                                                                        </button>
+                                                                    ) : githubInfo ? (
+                                                                        <div style={{ display: "flex", flexDirection: "column", background: "#fff", border: "1px solid #1a1a1a" }}>
+                                                                            {/* Title bar */}
+                                                                            <div style={{
+                                                                                height: "20px",
+                                                                                background: "linear-gradient(180deg, #d97a2a 0%, #a84e0e 100%)",
+                                                                                color: "#fff",
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                padding: "0 6px",
+                                                                                fontFamily: "var(--retro-icon-mono)",
+                                                                                fontSize: "9px",
+                                                                                fontWeight: "bold",
+                                                                                letterSpacing: "0.04em",
+                                                                                textTransform: "uppercase",
+                                                                                borderBottom: "1.5px solid #1a1a1a",
+                                                                                userSelect: "none"
+                                                                            }}>
+                                                                                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" style={{ marginRight: "4px", flexShrink: 0 }}>
+                                                                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                                                                                </svg>
+                                                                                <span>github.exe</span>
+                                                                                <div style={{ marginLeft: "auto", display: "flex", gap: "2px" }}>
+                                                                                    <span style={{
+                                                                                        width: "10px",
+                                                                                        height: "10px",
+                                                                                        border: "1px solid #1a1a1a",
+                                                                                        background: "#c8c4b8",
+                                                                                        display: "grid",
+                                                                                        placeItems: "center",
+                                                                                        fontSize: "7px",
+                                                                                        lineHeight: 1,
+                                                                                        boxShadow: "inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668"
+                                                                                    }}>_</span>
+                                                                                    <span style={{
+                                                                                        width: "10px",
+                                                                                        height: "10px",
+                                                                                        border: "1px solid #1a1a1a",
+                                                                                        background: "#c8c4b8",
+                                                                                        display: "grid",
+                                                                                        placeItems: "center",
+                                                                                        fontSize: "7px",
+                                                                                        lineHeight: 1,
+                                                                                        boxShadow: "inset 1px 1px 0 #ebe7db, inset -1px -1px 0 #7a7668"
+                                                                                    }}>✕</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            {/* Body */}
+                                                                            <div style={{
+                                                                                padding: "10px 8px",
+                                                                                background: "#fff",
+                                                                                color: "#1a1a1a",
+                                                                                textAlign: "left",
+                                                                                fontFamily: "var(--retro-icon-mono)",
+                                                                                fontSize: "11px",
+                                                                                display: "flex",
+                                                                                flexDirection: "column",
+                                                                                gap: "4px"
+                                                                            }}>
+                                                                                <div style={{ display: "flex", alignItems: "center", gap: "4px", color: "#5a5a5a", fontSize: "9px" }}>
+                                                                                    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
+                                                                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                                                                    </svg>
+                                                                                    <span>{githubInfo.owner}</span>
+                                                                                </div>
+                                                                                <div style={{
+                                                                                    fontWeight: "bold",
+                                                                                    fontSize: "12px",
+                                                                                    color: "#0055aa",
+                                                                                    textDecoration: "underline",
+                                                                                    wordBreak: "break-all",
+                                                                                    lineHeight: "1.2"
+                                                                                }}>
+                                                                                    {githubInfo.repo}
+                                                                                </div>
+                                                                                <div style={{ color: "#5a5a5a", fontSize: "9px", lineHeight: "1.3", margin: "2px 0" }}>
+                                                                                    GitHub Repository
+                                                                                </div>
+                                                                                <div style={{ display: "flex", gap: "8px", fontSize: "8px", color: "#6a6a6a", marginTop: "2px", fontWeight: "bold" }}>
+                                                                                    <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                                                                                        <span style={{ color: "#d97a2a" }}>★</span> Stars
+                                                                                    </span>
+                                                                                    <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                                                                                        <span>⑂</span> Forks
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            {/* Action button */}
+                                                                            <a
+                                                                                href={stdFile!.data.link}
+                                                                                target="_blank"
+                                                                                rel="noreferrer"
+                                                                                style={{
+                                                                                    display: "block",
+                                                                                    textAlign: "center",
+                                                                                    padding: "6px",
+                                                                                    background: "#efece0",
+                                                                                    color: "#1a1a1a",
+                                                                                    fontWeight: "bold",
+                                                                                    fontSize: "8.5px",
+                                                                                    textTransform: "uppercase",
+                                                                                    fontFamily: "var(--retro-icon-mono)",
+                                                                                    borderTop: "1.5px solid #1a1a1a",
+                                                                                    textDecoration: "none",
+                                                                                    cursor: "pointer",
+                                                                                    boxShadow: "inset 1px 1px 0 #fff"
+                                                                                }}
+                                                                            >
+                                                                                VISIT REPO ↗
+                                                                            </a>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className={styles.fileDetailPreviewPlaceholder}>[ no preview ]</div>
+                                                                    )}
                                                                 </div>
-                                                            ) : null}
+                                                                {previewImageSrc ? (
+                                                                    <span className={styles.fileDetailPreviewHint}>click to expand ↗</span>
+                                                                ) : null}
+                                                            </div>
+                                                            <div className={styles.fileDetailContent}>
+                                                                <h3 className={styles.fileDetailTitle}>{stdFile!.data.title}</h3>
 
-                                                            {linkHref ? (
-                                                                <a href={linkHref} target="_blank" rel="noreferrer" className={styles.fileDetailLink}>
-                                                                    {stdFile!.data.link}
-                                                                </a>
-                                                            ) : (
-                                                                <p className={styles.fileDetailLinkFallback}>{stdFile!.data.link || "—"}</p>
-                                                            )}
+                                                                <dl className={styles.fileDetailMeta}>
+                                                                    <dt className={styles.fileDetailMetaKey}>role</dt>
+                                                                    <dd>{stdFile!.data.role}</dd>
+                                                                    <dt className={styles.fileDetailMetaKey}>year</dt>
+                                                                    <dd>{stdFile!.data.year}</dd>
+                                                                    <dt className={styles.fileDetailMetaKey}>stack</dt>
+                                                                    <dd>{stdFile!.data.stack.join(", ")}</dd>
+                                                                </dl>
+
+                                                                <div className={styles.fileDetailDescription}>
+                                                                    <p>{stdFile!.data.blurb}</p>
+                                                                    {stdFile!.data.notes ? <p className={styles.fileDetailNotes}>{stdFile!.data.notes}</p> : null}
+                                                                </div>
+
+                                                                {stdFile!.data.tags.length > 0 ? (
+                                                                    <div className={styles.fileDetailTags}>
+                                                                        {stdFile!.data.tags.map((item) => (
+                                                                            <span key={item} className={styles.fileDetailTag}>
+                                                                                {item}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                ) : null}
+
+                                                                {linkHref ? (
+                                                                    <a href={linkHref} target="_blank" rel="noreferrer" className={styles.fileDetailLink}>
+                                                                        {stdFile!.data.link}
+                                                                    </a>
+                                                                ) : null}
+                                                            </div>
 
                                                             {stdFile!.data.mediaAssets.length > 0 ? (
                                                                 <div className={styles.fileDetailMediaSection}>
@@ -1096,9 +1224,9 @@ const DesktopSection = () => {
                                                                     <div className={styles.fileDetailMediaList}>{stdFile!.data.mediaAssets.map(renderMediaAsset)}</div>
                                                                 </div>
                                                             ) : null}
-                                                        </div>
                                                     </>
-                                                )}
+                                                    );
+                                                })()}
                                             </article>
                                         ) : null}
 
