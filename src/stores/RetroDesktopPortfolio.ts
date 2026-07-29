@@ -149,6 +149,8 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                     tags: ["Scheduling", "Open-Source", "UMD"],
                     linkText: "github.com/SolUMD \u2192",
                     linkHref: "https://github.com/SolUMD",
+                    figmaLinkText: "figma.com/design/SOC_Prototype \u2192",
+                    figmaLinkHref: "https://www.figma.com/design/ipceTF0FZ2LBMYvoEQAYoi/SOC_Prototype?node-id=0-1&t=ojcYkzRMEPdOmOT4-1",
                 },
                 designLanguageCard: {
                     swatches: ["var(--gold)", "var(--coral)", "var(--espresso)", "var(--teal)"],
@@ -186,7 +188,9 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                     stack: "SwiftUI \u00b7 CoreML \u00b7 Ollama",
                     tags: ["On Device AI", "Mobile", "Design"],
                     linkText: "github.com/akhilapnuri/RecallMobileApp \u2192",
-                    linkHref: "https://github.com/akhilapnuri/RecallMobileApp"
+                    linkHref: "https://github.com/akhilapnuri/RecallMobileApp",
+                    figmaLinkText: "figma.com/design/Safe-Heaven \u2192",
+                    figmaLinkHref: "https://www.figma.com/design/ZIVuVXyWln04tcfPhR5GzB/Safe-Heaven?node-id=0-1&t=WtDbr2HlOVulODym-1",
                 },
                 designLanguageCard: {
                     swatches: ["#21622D", "#FAF6ED", "#435D47"],
@@ -207,6 +211,8 @@ export const retroDesktopPortfolioNodes: PortfolioDesktopNode[] = [
                     tags: ["Hackathon", "OCR", "Design"],
                     linkText: "github.com/RibaDiba/SaveRe \u2192",
                     linkHref: "https://github.com/RibaDiba/SaveRe",
+                    figmaLinkText: "figma.com/design/HackPrinceton \u2192",
+                    figmaLinkHref: "https://www.figma.com/design/KbU0hNPS9ubXBmH9fZTp2y/HackPrinceton?node-id=0-1&t=1mKre8QtqUilH0Up-1",
                 },
                 designLanguageCard: {
                     swatches: ["#354A33", "#95C590", "#FAF6ED"],

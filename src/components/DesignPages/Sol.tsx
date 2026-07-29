@@ -248,13 +248,22 @@ export default function Sol({ roleCard, designLanguageCard }: DesignCardProps) {
                             </span>
                         ))}
                     </div>
-                    {roleCard.linkHref ? (
-                        <a className={styles.link} href={roleCard.linkHref} target="_blank" rel="noreferrer">
-                            {roleCard.linkText}
-                        </a>
-                    ) : (
-                        <span className={styles.link}>{roleCard.linkText}</span>
-                    )}
+                    <div className={styles.links}>
+                        {roleCard.linkHref ? (
+                            <a className={styles.link} href={roleCard.linkHref} target="_blank" rel="noreferrer">
+                                {roleCard.linkText}
+                            </a>
+                        ) : roleCard.linkText ? (
+                            <span className={styles.link}>{roleCard.linkText}</span>
+                        ) : null}
+                        {roleCard.figmaLinkHref ? (
+                            <a className={styles.link} href={roleCard.figmaLinkHref} target="_blank" rel="noreferrer">
+                                {roleCard.figmaLinkText || "Figma →"}
+                            </a>
+                        ) : roleCard.figmaLinkText ? (
+                            <span className={styles.link}>{roleCard.figmaLinkText}</span>
+                        ) : null}
+                    </div>
                 </div>
             </div>
 

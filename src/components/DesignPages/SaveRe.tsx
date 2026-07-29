@@ -78,18 +78,32 @@ export default function SaveRe({ roleCard, designLanguageCard }: DesignCardProps
                                 </span>
                             ))}
                         </div>
-                        {roleCard.linkHref ? (
-                            <a
-                                className={shared.link}
-                                href={roleCard.linkHref}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                {roleCard.linkText}
-                            </a>
-                        ) : (
-                            <span className={shared.link}>{roleCard.linkText}</span>
-                        )}
+                        <div className={shared.links}>
+                            {roleCard.linkHref ? (
+                                <a
+                                    className={shared.link}
+                                    href={roleCard.linkHref}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {roleCard.linkText}
+                                </a>
+                            ) : roleCard.linkText ? (
+                                <span className={shared.link}>{roleCard.linkText}</span>
+                            ) : null}
+                            {roleCard.figmaLinkHref ? (
+                                <a
+                                    className={shared.link}
+                                    href={roleCard.figmaLinkHref}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {roleCard.figmaLinkText || "Figma →"}
+                                </a>
+                            ) : roleCard.figmaLinkText ? (
+                                <span className={shared.link}>{roleCard.figmaLinkText}</span>
+                            ) : null}
+                        </div>
                     </div>
                 </div>
             </div>

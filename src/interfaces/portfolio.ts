@@ -12,6 +12,8 @@ export interface DesignRoleCard {
     tags: string[];
     linkText?: string;
     linkHref?: string;
+    figmaLinkText?: string;
+    figmaLinkHref?: string;
 }
 
 export interface DesignLanguageCard {
